@@ -131,11 +131,7 @@ def bruteforce(happiness, stress, n, s_max):
 					optimalRoomStress = totalStress
 					optimalRoom = rooms
 		print("\n")
-	print("s_max:", s_max)
-	print("\n")
-	print(happiness)
-	print("\n")
-	print(stress)
+
 	print("Total:", count)
 	print("Optimal Room:", optimalRoom, "Max Happiness:", maxHappiness, "Stress per room:", optimalRoomStress)
 	return optimalRoom
