@@ -1,6 +1,6 @@
 import random
 
-def calcHappiness(rooms):
+def calcHappiness(rooms, happiness):
 	totalHappiness = 0
 	for room in rooms:
 		room = list(room)
@@ -10,7 +10,7 @@ def calcHappiness(rooms):
 				totalHappiness += happiness[room[i]][room[j]]
 	return totalHappiness
 
-def calcStress(rooms):
+def calcStress(rooms, stress):
 	arr = []
 	for room in rooms:
 		totalStress = 0
@@ -62,17 +62,17 @@ def sorted_k_partitions(seq, k):
 
     return result
 
-if __name__ == "__main__":
-	n = 10
-	s_max = random.randint(0, 100000)/1000
+def bruteforce(happiness, stress, n, s_max):
+	# n = 10
+	# s_max = random.randint(0, 100000)/1000
 
-	happiness = {}
-	for i in range(n):
-		happiness[i] = {}
+	# happiness = {}
+	# for i in range(n):
+	# 	happiness[i] = {}
 
-	for i in range(n):
-		for j in range(i+1, n):
-			happiness[i][j] = random.randint(0, 100000)/1000
+	# for i in range(n):
+	# 	for j in range(i+1, n):
+	# 		happiness[i][j] = random.randint(0, 100000)/1000
 
 	# happiness[0][1] = 9.2
 	# happiness[0][2] = 5.4
@@ -81,13 +81,13 @@ if __name__ == "__main__":
 	# happiness[1][3] = 18
 	# happiness[2][3] = 87
 
-	stress = {}
-	for i in range(n):
-		stress[i] = {}
+	# stress = {}
+	# for i in range(n):
+	# 	stress[i] = {}
 
-	for i in range(n):
-		for j in range(i+1, n):
-			stress[i][j] = random.randint(0, 100000)/1000
+	# for i in range(n):
+	# 	for j in range(i+1, n):
+	# 		stress[i][j] = random.randint(0, 100000)/1000
 
 	# stress[0][1] = 3
 	# stress[0][2] = 40.8
@@ -115,8 +115,8 @@ if __name__ == "__main__":
 		for p in partition:
 			count += 1
 			rooms = p
-			totalHappiness = calcHappiness(rooms)
-			totalStress = calcStress(rooms)
+			totalHappiness = calcHappiness(rooms, happiness)
+			totalStress = calcStress(rooms, stress)
 			print("Room split:", rooms, "Total Happiness:", totalHappiness, "Total Stress:", totalStress)
 
 			# check if room partition is valid
@@ -131,8 +131,14 @@ if __name__ == "__main__":
 					optimalRoomStress = totalStress
 					optimalRoom = rooms
 		print("\n")
+	print("s_max:", s_max)
+	print("\n")
+	print(happiness)
+	print("\n")
+	print(stress)
 	print("Total:", count)
 	print("Optimal Room:", optimalRoom, "Max Happiness:", maxHappiness, "Stress per room:", optimalRoomStress)
+	return optimalRoom
 		
 			
 
