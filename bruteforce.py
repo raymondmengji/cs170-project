@@ -126,7 +126,7 @@ if __name__ == "__main__":
 				if stress_num > stress_limit[i]:
 					is_valid = False
 			if is_valid:
-				if totalHappiness > maxHappiness:
+				if totalHappiness >= maxHappiness:
 					maxHappiness = totalHappiness
 					optimalRoomStress = totalStress
 					optimalRoom = rooms
