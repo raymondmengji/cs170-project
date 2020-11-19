@@ -11,6 +11,13 @@ import lp
 import random
 import time
 
+"""
+    timetest.py
+
+    Randomly generates graphs of size ARGV[1], ARGV[2] times
+    and prints out the stats of the graphs that took the longest amount of time
+"""
+
 def prettyprint(happiness, stress):
     for key in happiness:
         for val in happiness[key]:
@@ -29,6 +36,7 @@ def order(arr, size):
 def timeTest(n, num_repetitions=10):
     '''
         timeTest(n, num_repetitions)
+
         Runs NUM_REPETITIONS trials of our ILP solver on a randomly
         generated graph with N nodes. If N <= 10, the bruteforce
         method will also be called to verify optimality, though
