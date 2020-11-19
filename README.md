@@ -19,6 +19,14 @@ Project Spec: https://cs170.org/assets/pdf/project_spec.pdf
 ## Approach
 We attempted to solve this NP-Hard problem using Mixed Integer Programming. 
 
+##Files
+solver.py  - Runs all files in samples/inputs and prints the highest valid Total Happiness of each graph
+
+timeall.py - Same as solver.py, but also prints diagnostic data about speed and room distributions for each file
+
+timetest.py n k - Randomly generates k graphs with n nodes and prints diagnostic data about its performance. 
+Useful to test hard inputs
+
 ## LP Solver
 We used the Gurobi optimizer, which is freely available for students. 
 
@@ -28,5 +36,4 @@ https://codereview.stackexchange.com/questions/1526/
 https://www.gurobi.com/
 https://www.gurobi.com/documentation/9.1/refman/py_python_api_overview.html
 https://cs.stackexchange.com/questions/12102/express-boolean-logic-operations-in-zero-one-integer-linear-programming-ilp
-https://stackoverflow.com/questions/53937159/how-to-find-all-partitions-of-a-list-s-into-k-subsets-can-be-empty
-
+https://codereview.stackexchange.com/questions/1526/
