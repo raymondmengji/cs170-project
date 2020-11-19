@@ -19,7 +19,7 @@ Project Spec: https://cs170.org/assets/pdf/project_spec.pdf
 ## Approach
 We attempted to solve this NP-Hard problem using Mixed Integer Programming. 
 
-##Files
+## Files
 solver.py  - Runs all files in samples/inputs and prints the highest valid Total Happiness of each graph
 
 timeall.py - Same as solver.py, but also prints diagnostic data about speed and room distributions for each file
