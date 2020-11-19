@@ -25,6 +25,7 @@ for i in range(n):
 
 slowest_time = float("-inf")
 num = 200
+f = open("out.txt", a)
 for i in range(num):
     #generate graph
     s = random.uniform(40, 60)
@@ -52,18 +53,19 @@ for i in range(num):
 
     assert round(bf_val, 4) == round(answer, 4), "Incorrect computation"
     if gurobi_time > slowest_time:
-        print(prettyprint(happiness))
-        print("-----")
-        print(prettyprint(stress))
-        print("-----")
-        print(answer)
-        print("-----")
-        print(gurobi_time)
-        print("-----")
-        print(bf_arr)
-        print("\n\n")
+        print(prettyprint(happiness), file = f)
+        print("-----", file = f)
+        print(prettyprint(stress), file = f)
+        print("-----", file = f)
+        print(answer, file = f)
+        print("-----", file = f)
+        print(gurobi_time, file = f)
+        print("-----", file = f)
+        print(bf_arr, file = f)
+        print("\n\n", file = f)
         slowest_time = gurobi_time
     #print("BF_VAL:", bf_val, "GUROBI_VAL:", answer)
     #print("Times:", bf_time, gurobi_time)
     #print("Speed Difference:", bf_time / gurobi_time)
     #print("------------------------------------------\n")
+f.close()
