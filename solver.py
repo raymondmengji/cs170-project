@@ -50,8 +50,9 @@ def solve(G, s):
             val = lp.lp(happiness, stress, s, n, k)
             if val:
                 lp_ans = max(lp_ans, val)
-
-        assert round(bf_val, 4) == round(lp_ans, 4), "Incorrect computation"
+        bf_val = round(bf_val, 3)
+        lp_ans = round(lp_ans, 3)
+        assert bf_val == lp_ans, "Incorrect computation"
         assignments = {}
         
         for i in range(len(bf_arr)):

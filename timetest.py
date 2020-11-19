@@ -12,7 +12,7 @@ import random
 import time
 
 def timeCompare():
-    n = 11
+    n = 10
     happiness = {}
     stress = {}
     for i in range(n):
@@ -21,7 +21,7 @@ def timeCompare():
 
     average_time_bf = 0
     average_time_gurobi = 0
-    num = 200
+    num = 10
     for i in range(num):
         #generate graph
         s = random.uniform(40, 60)
