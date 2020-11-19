@@ -1,8 +1,6 @@
 import re
 import os
-
 import networkx as nx
-
 import utils
 
 

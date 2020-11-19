@@ -23,6 +23,8 @@ def calcStress(rooms, stress):
 		arr.append(totalStress)
 	return arr
 
+#algorithm from https://codereview.stackexchange.com/questions/1526/
+#by Gregory Morse, Apr 10
 def subsets_k(collection, k): 
     yield from partition_k(collection, k, k)
 def partition_k(collection, min, k):
@@ -48,24 +50,19 @@ def bruteforce(happiness, stress, n, s_max):
     # corresponding max stress limit in each room:
     stress_limit = [s_max / num_room for num_room in breakout_rooms]
 
-
     s = list(range(n))
-
     maxHappiness = 0
     optimalRoom = None
     optimalRoomStress = None
     count = 0
-
     max_answers = {}
     
     for i in range(len(breakout_rooms)):
-        # print("Stress limit per room:", stress_limit[i])
         for p in subsets_k(s, breakout_rooms[i]):
             count += 1
             rooms = p
             totalHappiness = calcHappiness(rooms, happiness)
             totalStress = calcStress(rooms, stress)
-            # print("Room split:", rooms, "Total Happiness:", totalHappiness, "Total Stress:", totalStress)
 
             # check if room partition is valid
             is_valid = True
@@ -83,9 +80,5 @@ def bruteforce(happiness, stress, n, s_max):
                         maxHappiness = totalHappiness
                         optimalRoomStress = totalStress
                         optimalRoom = rooms
-            # print("\n")
-    #debug statements
-    # print("Total:", count)
-    #print("Num correct solutions:", max_answers[maxHappiness])
-    #print("Optimal Room:", optimalRoom, "Max Happiness:", maxHappiness, "Stress per room:", optimalRoomStress)
+
     return optimalRoom

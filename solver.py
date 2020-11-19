@@ -9,6 +9,8 @@ import os
 import gurobipy as gp
 from gurobipy import GRB
 import bruteforce
+import lp
+import random
 
 def parse(f):
     """
@@ -32,20 +34,30 @@ def solve(G, s):
         D: Dictionary mapping for student to breakout room r e.g. {0:2, 1:0, 2:1, 3:2}
         k: Number of breakout rooms
     """
-    
     n = G.order()
+    happiness = {}
+    stress = {}
+    for i in range(n):
+        happiness[i] = {}
+        stress[i]    = {}
+
+    for i in range(n):
+        for j in range(i + 1, n):
+            happiness[i][j] = G.get_edge_data(i, j)['happiness']
+            stress[i][j]    = G.get_edge_data(i, j)['stress']
+
+    ####################Random Graph Generator####################
+    if False: # Turn to False to run real files
+        s = random.uniform(40, 60)
+        for u in range(10):
+            happiness[u] = {}
+            stress[u] = {}
+            for v in range(u+1, 50):
+                happiness[u][v] = random.uniform(25, 75) #Uniform RV in [25, 75]
+                stress[u][v]    = random.uniform(0, 30)  
+    ##############################################################
+
     if n <= 10: #brute force approach
-        happiness = {}
-        stress = {}
-        for i in range(n):
-            happiness[i] = {}
-            stress[i]    = {}
-
-        for i in range(n):
-            for j in range(i + 1, n):
-                happiness[i][j] = G.get_edge_data(i, j)['happiness']
-                stress[i][j]    = G.get_edge_data(i, j)['stress']
-
         arr = bruteforce.bruteforce(happiness, stress, len(list(happiness.keys())), s)
         assignments = {}
         
@@ -53,14 +65,16 @@ def solve(G, s):
             for person in arr[i]:
                 assignments[person] = i
 
-        print("----------=====Output=====----------")
-        print("Number of Nodes:", n)
-        print("Number of Edges:", G.size())
-        print("Assignments:", assignments)
-        
         return assignments, len(arr)
     elif n == 20 or n == 50: #ILP 
-        raise NotImplementedError
+        answer = 0
+        for k in range(1, n + 1):
+            val = lp.lp(happiness, stress, s, n, k)
+            if val:
+                answer = max(answer, val)
+        print("Gurobi Answer:", answer)
+        arr = bruteforce.bruteforce(happiness, stress, len(list(happiness.keys())), s)
+        return {}, 0
     else:
         return "Graph sizes that aren't 10, 20, or 50 nodes aren't accepted"
 
