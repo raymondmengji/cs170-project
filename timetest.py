@@ -12,9 +12,10 @@ import random
 import time
 
 
-def prettyprint(val):
-    for key in val:
-        print(key, ": ", val[key])
+def prettyprint(happiness, stress):
+    for key in happiness:
+        for val in happiness[key]:
+            print(key, val, happiness[key][val], stress[key][val])
 
 n = 10
 happiness = {}
@@ -27,7 +28,7 @@ slowest_time = float("-inf")
 num = 200
 for i in range(num):
     #generate graph
-    s = random.uniform(40, 60)
+    s = round(random.uniform(40, 60), 3)
     for u in range(n):
         happiness[u] = {}
         stress[u] = {}
@@ -54,15 +55,13 @@ for i in range(num):
     answer = round(answer, 3)
     assert bf_val == answer, "Incorrect computation"
     if gurobi_time > slowest_time:
-        print(prettyprint(happiness))
+        print(10)
+        print(s)
+        print(prettyprint(happiness, stress))
         print("-----")
-        print(prettyprint(stress))
-        print("-----")
-        print(answer)
-        print("-----")
-        print(gurobi_time)
-        print("-----")
-        print(bf_arr)
+        print("max_happiness:", answer)
+        print("gurobi_time:", gurobi_time)
+        print("rooms:", bf_arr)
         print("\n\n")
         slowest_time = gurobi_time
     #print("BF_VAL:", bf_val, "GUROBI_VAL:", answer)
