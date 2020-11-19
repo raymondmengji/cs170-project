@@ -57,10 +57,11 @@ def timeTest(n, num_repetitions=10):
             stress[u] = {}
             for v in range(u + 1, n):
                 happiness[u][v] = round(random.uniform(1, 5), 3)   #URV [1, 5] is best
-                stress[u][v]    = round(random.uniform(1, 5), 3) #URV [1, 5] is best
+                #force everyone in their own groups by setting stress[u][v] to 101
+                stress[u][v]    = round(random.uniform(100, 101), 3) #URV [1, 5] is best
 
         #ILP Time
-        answer = 0
+        answer = -1
         bf_arr = []
         groups = {}
         group_size = 0
@@ -84,7 +85,7 @@ def timeTest(n, num_repetitions=10):
             print(n)
             print(s)
             print(prettyprint(happiness, stress))
-            print("-----Stats-----")
+            print("-------Stats-------")
             print("max_happiness:", answer)
             print("groupings gurobi:", order(groups, group_size))
             if n <= 10:

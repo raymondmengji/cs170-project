@@ -53,7 +53,7 @@ def solve(G, s):
         return assignments, len(bf_arr)
 
     elif n == 20 or n == 50:
-        answer = 0
+        answer = -1
         best_k = 0
         rooms  = {}
         for k in range(1, n + 1):

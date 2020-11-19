@@ -148,7 +148,6 @@ def lp(happiness, stress, s_max, n, room_num, return_rooms=True):
         m.setObjective(sum(arr), GRB.MAXIMIZE)
 
         m.optimize()
-
         #the variables are in m.getVars()
         if return_rooms:
             all_vars = m.getVars()

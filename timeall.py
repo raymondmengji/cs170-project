@@ -61,7 +61,7 @@ def solve(G, s):
         print("Brute Force Approach Time:", end_time - start_time)
 
     #ILP 
-    answer = 0
+    answer = -1
     best_k = 0
     rooms  = {}
     start_time = time.perf_counter()
