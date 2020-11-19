@@ -110,14 +110,14 @@ def bruteforce(happiness, stress, n, s_max):
 	optimalRoomStress = None
 	count = 0
 	for i in range(len(breakout_rooms)):
-		print("Stress limit per room:", stress_limit[i])
+		# print("Stress limit per room:", stress_limit[i])
 		partition = sorted_k_partitions(s, breakout_rooms[i])
 		for p in partition:
 			count += 1
 			rooms = p
 			totalHappiness = calcHappiness(rooms, happiness)
 			totalStress = calcStress(rooms, stress)
-			print("Room split:", rooms, "Total Happiness:", totalHappiness, "Total Stress:", totalStress)
+			# print("Room split:", rooms, "Total Happiness:", totalHappiness, "Total Stress:", totalStress)
 
 			# check if room partition is valid
 			is_valid = True
@@ -130,9 +130,9 @@ def bruteforce(happiness, stress, n, s_max):
 					maxHappiness = totalHappiness
 					optimalRoomStress = totalStress
 					optimalRoom = rooms
-		print("\n")
+		# print("\n")
 
-	print("Total:", count)
+	# print("Total:", count)
 	print("Optimal Room:", optimalRoom, "Max Happiness:", maxHappiness, "Stress per room:", optimalRoomStress)
 	return optimalRoom
 		
