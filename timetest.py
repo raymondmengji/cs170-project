@@ -21,7 +21,7 @@ def timeCompare():
 
     average_time_bf = 0
     average_time_gurobi = 0
-    num = 100
+    num = 200
     for i in range(num):
         #generate graph
         s = random.uniform(40, 60)
@@ -49,7 +49,7 @@ def timeCompare():
 
         assert round(bf_val, 4) == round(answer, 4), "Incorrect computation"
         print("BF_VAL:", bf_val, "GUROBI_VAL:", answer)
-        print("Times:", gurobi_time, bf_time)
+        print("Times:", bf_time, gurobi_time)
         print("Speed Difference:", bf_time / gurobi_time)
         print("------------------------------------------\n")
         average_time_bf += bf_time

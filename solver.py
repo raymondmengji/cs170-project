@@ -35,10 +35,10 @@ def solve(G, s):
     ####################Random Graph Generator####################
     if False: # Turn to False to run real files
         s = random.uniform(40, 60)
-        for u in range(10):
+        for u in range(n):
             happiness[u] = {}
             stress[u] = {}
-            for v in range(u+1, 50):
+            for v in range(u + 1, n):
                 happiness[u][v] = random.uniform(25, 75) #Uniform RV in [25, 75]
                 stress[u][v]    = random.uniform(0, 30)  
     ##############################################################
@@ -54,11 +54,11 @@ def solve(G, s):
         assert round(bf_val, 4) == round(lp_ans, 4), "Incorrect computation"
         assignments = {}
         
-        for i in range(len(arr)):
-            for person in arr[i]:
+        for i in range(len(bf_arr)):
+            for person in bf_arr[i]:
                 assignments[person] = i
 
-        return assignments, len(arr)
+        return assignments, len(bf_arr)
     elif n == 20 or n == 50: #ILP 
         answer = 0
         for k in range(1, n + 1):
@@ -66,7 +66,7 @@ def solve(G, s):
             if val:
                 answer = max(answer, val)
         print("Gurobi Answer:", answer)
-        arr = bruteforce.bruteforce(happiness, stress, len(list(happiness.keys())), s)
+        arr, val = bruteforce.bruteforce(happiness, stress, len(list(happiness.keys())), s)
         return {}, 0
     else:
         return "Graph sizes that aren't 10, 20, or 50 nodes aren't accepted"
