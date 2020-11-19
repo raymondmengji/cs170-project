@@ -25,7 +25,7 @@ for i in range(n):
 
 slowest_time = float("-inf")
 num = 200
-f = open("out.txt", a)
+f = open("out.txt", "a")
 for i in range(num):
     #generate graph
     s = random.uniform(40, 60)
