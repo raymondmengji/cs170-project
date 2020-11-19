@@ -139,9 +139,10 @@ def bruteforce(happiness, stress, n, s_max):
 					optimalRoom = rooms
 		# print("\n")
 
+    #debug statements
 	# print("Total:", count)
-	print("Num correct solutions:", max_answers[maxHappiness])
-	print("Optimal Room:", optimalRoom, "Max Happiness:", maxHappiness, "Stress per room:", optimalRoomStress)
+	#print("Num correct solutions:", max_answers[maxHappiness])
+	#print("Optimal Room:", optimalRoom, "Max Happiness:", maxHappiness, "Stress per room:", optimalRoomStress)
 	return optimalRoom
 		
 			

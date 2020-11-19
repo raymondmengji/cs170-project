@@ -6,8 +6,8 @@ import glob
 import os
 
 
-import gurobipy as gp
-from gurobipy import GRB
+#import gurobipy as gp
+#from gurobipy import GRB
 import bruteforce
 
 def parse(f):
@@ -32,31 +32,37 @@ def solve(G, s):
         D: Dictionary mapping for student to breakout room r e.g. {0:2, 1:0, 2:1, 3:2}
         k: Number of breakout rooms
     """
-
-    # TODO: your code here!
-    d = nx.to_dict_of_dicts(G)
     
-    happiness = {}
-    stress = {}
-    for key1 in d.keys():
-        happiness[key1] = {}
-        stress[key1] = {}
-        key_dict = d[key1]
-        for key2 in key_dict.keys():
-            happiness[key1][key2] = key_dict[key2]['happiness']
-            stress[key1][key2] = key_dict[key2]['stress']
+    n = G.order()
+    if n == 10: #brute force approach
+        happiness = {}
+        stress = {}
+        for i in range(n):
+            happiness[i] = {}
+            stress[i]    = {}
 
-    arr = bruteforce.bruteforce(happiness, stress, len(list(happiness.keys())), s)
-    
-    assignments = {}
-    for i in range(len(arr)):
-        for person in arr[i]:
-            assignments[person] = i
+        for i in range(n):
+            for j in range(i+1, n):
+                happiness[i][j] = G.get_edge_data(i, j)['happiness']
+                stress[i][j]    = G.get_edge_data(i, j)['stress']
 
-    print("Assignments:", assignments)
-    return assignments, len(arr)
+        arr = bruteforce.bruteforce(happiness, stress, len(list(happiness.keys())), s)
+        assignments = {}
+        
+        for i in range(len(arr)):
+            for person in arr[i]:
+                assignments[person] = i
 
-
+        print("----------=====Output=====----------")
+        print("Number of Nodes:", n)
+        print("Number of Edges:", G.size())
+        print("Assignments:", assignments)
+        
+        return assignments, len(arr)
+    elif n == 20 or n == 50: #ILP 
+        raise NotImplementedError
+    else:
+        return "Graph sizes that aren't 10, 20, or 50 nodes aren't accepted"
 
 
 # Here's an example of how to run your solver.
