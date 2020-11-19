@@ -9,3 +9,8 @@ https://stackoverflow.com/questions/53937159/how-to-find-all-partitions-of-a-lis
 
 ## Resources That might be used
 https://keisan.casio.com/exec/system/1292214964
+
+https://www.gurobi.com/
+
+https://cs.stackexchange.com/questions/12102/express-boolean-logic-operations-in-zero-one-integer-linear-programming-ilp
+
