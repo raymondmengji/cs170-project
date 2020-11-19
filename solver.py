@@ -6,8 +6,8 @@ import glob
 import os
 
 
-#import gurobipy as gp
-#from gurobipy import GRB
+import gurobipy as gp
+from gurobipy import GRB
 import bruteforce
 
 def parse(f):
