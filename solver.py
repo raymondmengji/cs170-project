@@ -67,7 +67,7 @@ def solve(G, s):
             if val:
                 answer = max(answer, val)
         print("Gurobi Answer:", answer)
-        arr, val = bruteforce.bruteforce(happiness, stress, len(list(happiness.keys())), s)
+        
         return {}, 0
     else:
         return "Graph sizes that aren't 10, 20, or 50 nodes aren't accepted"
