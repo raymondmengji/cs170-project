@@ -154,9 +154,11 @@ def lp(happiness, stress, s_max, n, room_num):
 
         # for v in m.getVars():
         #     print("%s %g" % (v.varName, v.x))
-        print("Obj: %g" % m.objVal)
+        #print("Obj: %g" % m.objVal)
         return m.objVal
     except gp.GurobiError as e:
-        print("Error Code " + str(e.errno) + ": " + str(e))
+        #print("Error Code " + str(e.errno) + ": " + str(e))
+        return
     except AttributeError:
-        print("Encountered an attribute error")
+        #print("Encountered an attribute error")
+        return

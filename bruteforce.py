@@ -81,4 +81,4 @@ def bruteforce(happiness, stress, n, s_max):
                         optimalRoomStress = totalStress
                         optimalRoom = rooms
 
-    return optimalRoom
+    return optimalRoom, maxHappiness
