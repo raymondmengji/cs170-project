@@ -5,8 +5,23 @@ import sys
 import glob
 import os
 
+
+import gurobipy as gp
+from gurobipy import GRB
 import bruteforce
 
+def parse(f):
+    """
+    Args:
+        f: File of inputs
+    Returns:
+        LP: File of LP constraints and variables 
+    """
+    # How will we set up the LP constraints?
+    file = open(f, 'r')
+    for line in file: 
+        pass
+    return None    
 
 def solve(G, s):
     """
