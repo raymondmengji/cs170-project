@@ -34,7 +34,7 @@ def solve(G, s):
     """
     
     n = G.order()
-    if n == 10: #brute force approach
+    if n <= 10: #brute force approach
         happiness = {}
         stress = {}
         for i in range(n):
@@ -42,7 +42,7 @@ def solve(G, s):
             stress[i]    = {}
 
         for i in range(n):
-            for j in range(i+1, n):
+            for j in range(i + 1, n):
                 happiness[i][j] = G.get_edge_data(i, j)['happiness']
                 stress[i][j]    = G.get_edge_data(i, j)['stress']
 
