@@ -32,8 +32,13 @@ We used the Gurobi optimizer, which is freely available for students.
 
 ## Resources Used
 https://arxiv.org/pdf/1802.07144.pdf
+
 https://codereview.stackexchange.com/questions/1526/
+
 https://www.gurobi.com/
+
 https://www.gurobi.com/documentation/9.1/refman/py_python_api_overview.html
+
 https://cs.stackexchange.com/questions/12102/express-boolean-logic-operations-in-zero-one-integer-linear-programming-ilp
-https://codereview.stackexchange.com/questions/1526/
+
+Algorithm by Gregory Morse from https://codereview.stackexchange.com/questions/1526/
