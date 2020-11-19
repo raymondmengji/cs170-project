@@ -25,7 +25,7 @@ for i in range(n):
     stress[i]    = {}
 
 slowest_time = float("-inf")
-num = 200
+num = 100
 for i in range(num):
     #generate graph
     s = round(random.uniform(40, 60), 3)
@@ -33,8 +33,8 @@ for i in range(num):
         happiness[u] = {}
         stress[u] = {}
         for v in range(u + 1, n):
-            happiness[u][v] = random.uniform(25, 75) #Uniform RV in [25, 75]
-            stress[u][v]    = random.uniform(0, 30)  
+            happiness[u][v] = round(random.uniform(25, 75), 3) #Uniform RV in [25, 75]
+            stress[u][v]    = round(random.uniform(0, 30), 3)  
 
     #ILP Time
     start_time = time.perf_counter()
