@@ -25,15 +25,15 @@ def timeTest():
         stress[i]    = {}
 
     slowest_time = float("-inf")
-    num = 500
+    num = 200
     for i in range(num):
         #generate graph
-        s = round(random.uniform(50, 99), 3)
+        s = round(random.uniform(80, 99), 3)
         for u in range(n):
             happiness[u] = {}
             stress[u] = {}
             for v in range(u + 1, n):
-                happiness[u][v] = round(random.uniform(0, 20), 3) #Uniform RV in [25, 75]
+                happiness[u][v] = round(random.uniform(1, 5), 3) #Uniform RV in [25, 75]
                 stress[u][v]    = happiness[u][v] #round(random.uniform(0, 50), 3)  
 
         #ILP Time
