@@ -16,8 +16,24 @@ def prettyprint(happiness, stress):
         for val in happiness[key]:
             print(key, val, happiness[key][val], stress[key][val])
 
-def timeTest():
-    n = int(sys.argv[1])
+def order(arr, size):
+    '''
+        Reorders optimal room array so it looks like the brute force output.
+    '''
+    ordered_array = [[] for i in range(size)]
+    for key in arr:
+        ordered_array[arr[key]].append(key)
+    ordered_array.sort(key = lambda x: x[0])
+    return ordered_array
+
+def timeTest(n, num_repetitions=10):
+    '''
+        timeTest(n, num_repetitions)
+        Runs NUM_REPETITIONS trials of our ILP solver on a randomly
+        generated graph with N nodes. If N <= 10, the bruteforce
+        method will also be called to verify optimality, though
+        this can be changed by changing respective cases.
+    '''
     happiness = {}
     stress = {}
     for i in range(n):
@@ -25,51 +41,56 @@ def timeTest():
         stress[i]    = {}
 
     slowest_time = float("-inf")
-    num = 250
-    for i in range(num):
+    for i in range(num_repetitions):
         #generate graph
         s = round(random.uniform(65, 90), 3)
         for u in range(n):
             happiness[u] = {}
             stress[u] = {}
             for v in range(u + 1, n):
-                happiness[u][v] = round(random.uniform(1, 5), 3) #Uniform RV in [5, 20]
-                stress[u][v]    = round(random.uniform(1, 5), 3) #round(random.uniform(0, 50), 3)  
+                happiness[u][v] = round(random.uniform(1, 5), 3)   #URV [1, 5] is best
+                stress[u][v]    = round(random.uniform(1, 5), 3) #URV [1, 5] is best
 
         #ILP Time
-        start_time = time.perf_counter()
         answer = 0
+        bf_arr = []
+        groups = {}
+        group_size = 0
+        start_time = time.perf_counter()
         for k in range(1, n + 1):
-            val = lp.lp(happiness, stress, s, n, k)
-            if val:
-                answer = max(answer, val)
+            val, arr = lp.lp(happiness, stress, s, n, k)
+            if val is not None and answer < val:
+                answer = float(val)
+                groups = arr
+                group_size = k
         end_time = time.perf_counter()
         gurobi_time = end_time - start_time
         #Bruteforce Time
-        #if n <= 10:
-        #    start_time = time.perf_counter()
-        #    bf_arr, bf_val = bruteforce.bruteforce(happiness, stress, len(list(happiness.keys())), s)
-        #    end_time = time.perf_counter()
-        #    bf_time = end_time - start_time
-        #    assert round(bf_val, 4) == round(answer, 4), "Incorrect computation"
+        if n <= 10:
+            start_time = time.perf_counter()
+            bf_arr, bf_val = bruteforce.bruteforce(happiness, stress, len(list(happiness.keys())), s)
+            end_time = time.perf_counter()
+            bf_time = end_time - start_time
         
         if gurobi_time > slowest_time:
-            print(10)
+            print(n)
             print(s)
             print(prettyprint(happiness, stress))
             print("-----Stats-----")
             print("max_happiness:", answer)
+            print("groupings gurobi:", order(groups, group_size))
+            if n <= 10:
+                assert round(bf_val, 3) == round(answer, 3), "Incorrect computation"
+                print("groupings brutef:", bf_arr)
+                print("brutef time:", bf_time)
             print("gurobi_time:", gurobi_time)
-            #print("rooms:", bf_arr)
             print("\n\n")
             slowest_time = gurobi_time
-        #print("BF_VAL:", bf_val, "GUROBI_VAL:", answer)
-        #print("Times:", bf_time, gurobi_time)
-        #print("Speed Difference:", bf_time / gurobi_time)
-        #print("------------------------------------------\n")
-
 
 if __name__ == "__main__":
-    assert len(sys.argv) == 2, \
-        "Must have two arguments (run python3 timetest.py #)"
-    timeTest()
+    assert len(sys.argv) >= 2, \
+        "Must have at least two arguments (run python3 timetest.py #nodes (#repetitions))"
+    if len(sys.argv) == 3:
+        timeTest(int(sys.argv[1]), int(sys.argv[2]))
+    else:
+        timeTest(int(sys.argv[1]))
