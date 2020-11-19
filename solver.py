@@ -5,25 +5,11 @@ import sys
 import glob
 import os
 
-
 import gurobipy as gp
 from gurobipy import GRB
 import bruteforce
 import lp
 import random
-
-def parse(f):
-    """
-    Args:
-        f: File of inputs
-    Returns:
-        LP: File of LP constraints and variables 
-    """
-    # How will we set up the LP constraints?
-    file = open(f, 'r')
-    for line in file: 
-        pass
-    return None    
 
 def solve(G, s):
     """
@@ -58,7 +44,14 @@ def solve(G, s):
     ##############################################################
 
     if n <= 10: #brute force approach
-        arr = bruteforce.bruteforce(happiness, stress, len(list(happiness.keys())), s)
+        bf_arr, bf_val = bruteforce.bruteforce(happiness, stress, len(list(happiness.keys())), s)
+        lp_ans = 0
+        for k in range(1, n + 1):
+            val = lp.lp(happiness, stress, s, n, k)
+            if val:
+                lp_ans = max(lp_ans, val)
+
+        assert round(bf_val, 4) == round(lp_ans, 4), "Incorrect computation"
         assignments = {}
         
         for i in range(len(arr)):
