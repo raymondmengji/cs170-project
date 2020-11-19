@@ -22,10 +22,6 @@ def solve(G, s):
         D: Dictionary mapping for student to breakout room r e.g. {0:2, 1:0, 2:1, 3:2}
         k: Number of breakout rooms
     """
-<<<<<<< HEAD
-=======
-
-    # TODO: your code here!
     d = nx.to_dict_of_dicts(G)
     
     happiness = {}
