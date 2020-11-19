@@ -33,8 +33,8 @@ for i in range(num):
         happiness[u] = {}
         stress[u] = {}
         for v in range(u + 1, n):
-            happiness[u][v] = round(random.uniform(25, 75), 3) #Uniform RV in [25, 75]
-            stress[u][v]    = round(random.uniform(0, 30), 3)  
+            happiness[u][v] = random.uniform(25, 75) #Uniform RV in [25, 75]
+            stress[u][v]    = random.uniform(0, 30)  
 
     #ILP Time
     start_time = time.perf_counter()
@@ -50,10 +50,8 @@ for i in range(num):
     bf_arr, bf_val = bruteforce.bruteforce(happiness, stress, len(list(happiness.keys())), s)
     end_time = time.perf_counter()
     bf_time = end_time - start_time
-
-    bf_val = round(bf_val, 3)
-    answer = round(answer, 3)
-    assert bf_val == answer, "Incorrect computation"
+    
+    assert round(bf_val, 4) == round(answer, 4), "Incorrect computation"
     if gurobi_time > slowest_time:
         print(10)
         print(s)
