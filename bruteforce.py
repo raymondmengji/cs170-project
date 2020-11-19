@@ -80,5 +80,5 @@ def bruteforce(happiness, stress, n, s_max):
                         maxHappiness = totalHappiness
                         optimalRoomStress = totalStress
                         optimalRoom = rooms
-
+    optimalRoom.sort(key=lambda room: room[0]) #sort by # of first person in room
     return optimalRoom, maxHappiness

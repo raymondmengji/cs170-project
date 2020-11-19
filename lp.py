@@ -2,7 +2,7 @@ import gurobipy as gp
 from gurobipy import GRB
 
         
-def lp(happiness, stress, s_max, n, room_num):
+def lp(happiness, stress, s_max, n, room_num, return_rooms=True):
 
     
     try:
@@ -148,17 +148,22 @@ def lp(happiness, stress, s_max, n, room_num):
         m.setObjective(sum(arr), GRB.MAXIMIZE)
 
         m.optimize()
-
-
         #the variables are in m.getVars()
-
-        # for v in m.getVars():
-        #     print("%s %g" % (v.varName, v.x))
-        #print("Obj: %g" % m.objVal)
-        return m.objVal
+        if return_rooms:
+            all_vars = m.getVars()
+            desired_vars = []
+            for v in all_vars:
+                if v.varName[0] == 'g' and int(v.x) == 1:
+                    desired_vars.append(v.varName)
+            ans = {}
+            for v in desired_vars:
+                x = v.split('_', 1)[1].split(",")
+                ans[int(x[0])] = int(x[1])
+            return m.objVal, ans
+        return m.objVal, []
     except gp.GurobiError as e:
         #print("Error Code " + str(e.errno) + ": " + str(e))
-        return
+        return None, None
     except AttributeError:
         #print("Encountered an attribute error")
-        return
+        return None, None

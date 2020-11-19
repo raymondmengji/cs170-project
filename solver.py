@@ -11,6 +11,16 @@ import bruteforce
 import lp
 import random
 
+def order(arr, size):
+    '''
+        Reorders optimal room array so it looks like the brute force output.
+    '''
+    ordered_array = [[] for i in range(size)]
+    for key in arr:
+        ordered_array[arr[key]].append(key)
+    ordered_array.sort(key = lambda x: x[0])
+    return ordered_array
+
 def solve(G, s):
     """
     Args:
@@ -21,56 +31,42 @@ def solve(G, s):
         k: Number of breakout rooms
     """
     n = G.order()
+
+    #read graph from G
     happiness = {}
     stress = {}
     for i in range(n):
         happiness[i] = {}
         stress[i]    = {}
-
     for i in range(n):
         for j in range(i + 1, n):
             happiness[i][j] = G.get_edge_data(i, j)['happiness']
             stress[i][j]    = G.get_edge_data(i, j)['stress']
 
-    ####################Random Graph Generator####################
-    if False: # Turn to False to run real files
-        s = random.uniform(40, 60)
-        for u in range(n):
-            happiness[u] = {}
-            stress[u] = {}
-            for v in range(u + 1, n):
-                happiness[u][v] = random.uniform(25, 75) #Uniform RV in [25, 75]
-                stress[u][v]    = random.uniform(0, 30)  
-    ##############################################################
-
-    if n <= 10: #brute force approach
+    if n <= 10:
         bf_arr, bf_val = bruteforce.bruteforce(happiness, stress, len(list(happiness.keys())), s)
-        lp_ans = 0
-        for k in range(1, n + 1):
-            val = lp.lp(happiness, stress, s, n, k)
-            if val:
-                lp_ans = max(lp_ans, val)
         bf_val = round(bf_val, 3)
-        lp_ans = round(lp_ans, 3)
-        assert bf_val == lp_ans, "Incorrect computation"
         assignments = {}
-        
         for i in range(len(bf_arr)):
             for person in bf_arr[i]:
                 assignments[person] = i
-
         return assignments, len(bf_arr)
-    elif n == 20 or n == 50: #ILP 
-        answer = 0
+
+    elif n == 20 or n == 50:
+        answer = -1
+        best_k = 0
+        rooms  = {}
         for k in range(1, n + 1):
-            val = lp.lp(happiness, stress, s, n, k)
-            if val:
-                answer = max(answer, val)
-        print("Gurobi Answer:", answer)
-        
-        return {}, 0
+            val, arr = lp.lp(happiness, stress, s, n, k)
+            if val is not None and val > answer:
+                print("Better Answer:", val, arr, k)
+                answer = val
+                rooms  = arr
+                best_k = k
+        answer = round(answer, 3)
+        return rooms, best_k
     else:
-        return "Graph sizes that aren't 10, 20, or 50 nodes aren't accepted"
+        return "Graph sizes that aren't <=10, 20, or 50 nodes aren't accepted"
 
 
 # Here's an example of how to run your solver.
