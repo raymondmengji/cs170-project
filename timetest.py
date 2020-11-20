@@ -62,7 +62,7 @@ def timeTest(n, num_repetitions=10):
             happiness[u] = {}
             stress[u] = {}
             for v in range(u + 1, n):
-                happiness[u][v] = round(random.uniform(2, 5), 3)   #URV [1, 5] is best
+                happiness[u][v] = round(random.uniform(1, 5), 3)   #URV [1, 5] is best
                 #force everyone in their own groups by setting stress[u][v] to 101
                 stress[u][v]    = round(random.uniform(5, 10), 3) #URV [1, 5] is best
 
