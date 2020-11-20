@@ -2,13 +2,23 @@ import gurobipy as gp
 from gurobipy import GRB
 
         
-def lp(happiness, stress, s_max, n, room_num, return_rooms=True):
-
-    
+def lp(happiness, stress, s_max, n, room_num, return_rooms=True, alternate_parameters=True):
+    print("curr:", room_num)
     try:
         #model
         m = gp.Model("mip1")
-        m.setParam( 'OutputFlag', 0)
+        m.setParam("OutputFlag", 0)
+        if alternate_parameters:
+            m.setParam("Method", 3)
+            m.setParam("FeasibilityTol", 1e-3)
+            m.setParam("IntFeasTol", 1e-3)
+            m.setParam("Heuristics", 0.01)
+            m.setParam("MIPGapAbs", 0.5)
+            m.setParam("MIPGap", 0.5)
+            m.setParam("NodeMethod", 0)
+        #m.setParam("Symmetry", 2)
+        #m.setParam("Disconnected", 0)
+        #m.setParam("MIPFocus", 2)
         constraintCounter = 0
         varCounter = 0
 

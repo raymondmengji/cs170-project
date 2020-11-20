@@ -76,10 +76,12 @@ def solve(G, s):
 
     print("Gurobi Approach Time:     ", end_time - start_time)
     print("Gurobi Answer:            ", answer)
+    print("Gurobi Rooms (raw):       ", rooms, best_k)
+    print("Gurobi Rooms:", order(rooms, best_k))
     if n <= 10:
-        assert bf_val == answer, "Incorrect computation"
-        print("Gurobi Rooms:", order(rooms, best_k))
+        #assert bf_val == answer, "Incorrect computation"
         print("Brutef Rooms:", bf_arr)
+        print("Brutef Answer:", bf_val)
     return rooms, best_k
     
 # For testing a folder of inputs to create a folder of outputs, you can use glob (need to import it)

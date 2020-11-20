@@ -10,6 +10,7 @@ import bruteforce
 import lp
 import random
 import time
+import numpy as np
 
 """
     timetest.py
@@ -23,14 +24,17 @@ def prettyprint(happiness, stress):
         for val in happiness[key]:
             print(key, val, happiness[key][val], stress[key][val])
 
-def order(arr, size):
+def order(arr):
     '''
         Reorders optimal room array so it looks like the brute force output.
     '''
-    ordered_array = [[] for i in range(size)]
+    num_rooms = -1
+    for i in arr:
+        num_rooms = max(num_rooms, arr[i])
+    ordered_array = [[] for i in range(num_rooms + 1)]
     for key in arr:
         ordered_array[arr[key]].append(key)
-    ordered_array.sort(key = lambda x: x[0])
+    ordered_array.sort(key = lambda x: (x[0] if len(x) > 0 else None))
     return ordered_array
 
 def timeTest(n, num_repetitions=10):
@@ -48,6 +52,8 @@ def timeTest(n, num_repetitions=10):
         happiness[i] = {}
         stress[i]    = {}
 
+    average_diff = []
+    error = []
     slowest_time = float("-inf")
     for i in range(num_repetitions):
         #generate graph
@@ -56,9 +62,9 @@ def timeTest(n, num_repetitions=10):
             happiness[u] = {}
             stress[u] = {}
             for v in range(u + 1, n):
-                happiness[u][v] = round(random.uniform(1, 5), 3)   #URV [1, 5] is best
+                happiness[u][v] = round(random.uniform(2, 5), 3)   #URV [1, 5] is best
                 #force everyone in their own groups by setting stress[u][v] to 101
-                stress[u][v]    = round(random.uniform(100, 101), 3) #URV [1, 5] is best
+                stress[u][v]    = round(random.uniform(5, 10), 3) #URV [1, 5] is best
 
         #ILP Time
         answer = -1
@@ -74,6 +80,20 @@ def timeTest(n, num_repetitions=10):
                 group_size = k
         end_time = time.perf_counter()
         gurobi_time = end_time - start_time
+
+        answer2 = -1
+        groups2 = {}
+        group_size2 = 0
+        start_time = time.perf_counter()
+        for k in range(1, n + 1):
+            val, arr = lp.lp(happiness, stress, s, n, k, True, False)
+            if val is not None and answer2 < val:
+                answer2 = float(val)
+                groups2 = arr
+                group_size2 = k
+        end_time = time.perf_counter()
+        gurobi_time2 = end_time - start_time
+
         #Bruteforce Time
         if n <= 10:
             start_time = time.perf_counter()
@@ -81,20 +101,36 @@ def timeTest(n, num_repetitions=10):
             end_time = time.perf_counter()
             bf_time = end_time - start_time
         
-        if gurobi_time > slowest_time:
+        if True or gurobi_time > slowest_time:
             print(n)
             print(s)
             print(prettyprint(happiness, stress))
             print("-------Stats-------")
-            print("max_happiness:", answer)
-            print("groupings gurobi:", order(groups, group_size))
+            print("optimize happiness:", answer)
+            print("normal   happiness:", answer2)
+            print(groups, groups2)
+            print("optimize groups:", order(groups))
+            print("normal   groups:", order(groups2))
             if n <= 10:
-                assert round(bf_val, 3) == round(answer, 3), "Incorrect computation"
-                print("groupings brutef:", bf_arr)
-                print("brutef time:", bf_time)
-            print("gurobi_time:", gurobi_time)
+                #assert round(bf_val, 3) == round(answer, 3), "Incorrect computation"
+                print("brutef   groupings:", bf_arr)
+                print("brutef   time:", bf_time)
+            print("optimize time:", gurobi_time)
+            print("normal   time:", gurobi_time2)
+            #Error between optimal and actual 
+            error.append(round((answer - answer2) / ((answer + answer2) / 2) * 100, 3))
+            #Percentage difference between optimized and normal speeds
+            speedup = round(((gurobi_time2 - gurobi_time) / ((gurobi_time + gurobi_time2)/2)) * 100, 2)
+            average_diff.append(speedup)
+            print("Difference:", speedup, "%")
             print("\n\n")
             slowest_time = gurobi_time
+    print(error)
+    print(average_diff)
+    print("Average Error:    ", np.average(error))
+    print("Variance of Error:", np.var(error))
+    print("Average Difference:          ", np.average(average_diff))
+    print("Variance of Speed Difference:", np.var(average_diff))
 
 if __name__ == "__main__":
     assert len(sys.argv) >= 2, \
