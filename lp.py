@@ -1,24 +1,65 @@
 import gurobipy as gp
 from gurobipy import GRB
+import bruteforce
 
+def lp_solve(happiness, stress, s_max, n, optimize=True):
+    answer = 0
+    best_k = n
+    rooms  = {i: i for i in range(n)}
+
+    #if n = 20, brute force 1,2,17,18,19
+    #if n = 50, brute force 1,48,49
+    #if n <= 10, don't brute force anything (for testing purposes)
+    #always brute force k = 1, n
+    bruteforce_nums = []
+    if n == 20:
+        bruteforce_nums = [1,2,17,18,19]
+    elif n == 50:
+        bruteforce_nums = [1,48,49]
+
+    nonbruteforce_nums = [i for i in range(1, n) if i not in bruteforce_nums]
+    print("Bruteforce...", end=" ", flush=True)
+    for k in bruteforce_nums:
+        val, arr = bruteforce.bruteforce_k(happiness, stress, n, s_max, k)
+        #print("value found", round(val, 3))
+        if val > answer:
+            answer = round(val, 3)
+            rooms = arr
+            best_k = k
+    print()
+    for k in nonbruteforce_nums:
+        val, arr = lp(happiness, stress, s_max, n, k, answer, optimize_parameters=optimize)
+        #print("value found", round(val, 3))
+        if val > answer:
+            answer = round(val, 3)
+            rooms  = arr
+            best_k = k   
+    print()
+    return round(answer, 3), rooms, best_k
         
-def lp(happiness, stress, s_max, n, room_num, return_rooms=True, alternate_parameters=True):
-    print("curr:", room_num)
+def lp(happiness, stress, s_max, n, room_num, cutoff,
+    return_rooms=True, optimize_parameters=True):
     try:
         #model
         m = gp.Model("mip1")
         m.setParam("OutputFlag", 0)
-        if alternate_parameters:
+        m.setParam("TuneOutput", 0)
+        if optimize_parameters:
             m.setParam("Method", 3)
             m.setParam("FeasibilityTol", 1e-3)
             m.setParam("IntFeasTol", 1e-3)
-            m.setParam("Heuristics", 0.01)
-            m.setParam("MIPGapAbs", 0.5)
-            m.setParam("MIPGap", 0.5)
-            m.setParam("NodeMethod", 0)
-        #m.setParam("Symmetry", 2)
-        #m.setParam("Disconnected", 0)
-        #m.setParam("MIPFocus", 2)
+            m.setParam("Heuristics", 0)
+            m.setParam("Cutoff", cutoff)
+            #m.setParam("Presolve", 2)
+            m.setParam("TuneCriterion", 0)
+            m.setParam("SolutionLimit", 1)
+            #m.setParam("MIPGapAbs", 0.01)
+            #m.setParam("MIPGap", 0.01)
+            #m.setParam("BarConvTol", 1e-3)
+            #m.setParam("NodeMethod", 2)
+            #m.setParam("Symmetry", 2)
+            #m.setParam("Disconnected", 0)
+            #m.setParam("MIPFocus", 2)
         constraintCounter = 0
         varCounter = 0
 
@@ -68,7 +109,7 @@ def lp(happiness, stress, s_max, n, room_num, return_rooms=True, alternate_param
                     indicators.append(temp_edge_indicators[k][u][v])
                     m.addConstr(e[u][v] >= temp_edge_indicators[k][u][v], "c" + str(constraintCounter))
                     constraintCounter += 1
-                m.addConstr(e[u][v] <= sum(indicators))
+                m.addConstr(e[u][v] <= gp.quicksum(indicators))
                 m.addConstr(e[u][v] >= 0, "c" + str(constraintCounter))
                 constraintCounter += 1
                 m.addConstr(e[u][v] <= 1, "c" + str(constraintCounter))
@@ -101,9 +142,9 @@ def lp(happiness, stress, s_max, n, room_num, return_rooms=True, alternate_param
             room_arr = []
             for k in range(room_num):
                 room_arr.append(g[k][v])
-            m.addConstr(sum(room_arr) >= 1, "c" + str(constraintCounter))
+            m.addConstr(gp.quicksum(room_arr) >= 1, "c" + str(constraintCounter))
             constraintCounter += 1
-            m.addConstr(sum(room_arr) <= 1, "c" + str(constraintCounter))
+            m.addConstr(gp.quicksum(room_arr) <= 1, "c" + str(constraintCounter))
             constraintCounter += 1
 
         # for k in g.keys():
@@ -137,7 +178,7 @@ def lp(happiness, stress, s_max, n, room_num, return_rooms=True, alternate_param
             for u in range(n):
                 for v in range(u+1, n):
                     room_arr.append(stress[u][v]*temp_edge_indicators[k][u][v])
-            m.addConstr(sum(room_arr) <= s_max/room_num, "c"+str(constraintCounter))
+            m.addConstr(gp.quicksum(room_arr) <= s_max/room_num, "c"+str(constraintCounter))
             constraintCounter += 1
 
 
@@ -155,8 +196,14 @@ def lp(happiness, stress, s_max, n, room_num, return_rooms=True, alternate_param
         for u in e.keys():
             for v in e[u].keys():
                 arr.append(e[u][v] * happiness[u][v])
-        m.setObjective(sum(arr), GRB.MAXIMIZE)
+        m.setObjective(gp.quicksum(arr), GRB.MAXIMIZE)
 
+        if (n == 20 and room_num == 3) \
+            or (n == 50 and room_num == 2) \
+            or (n <= 10 and room_num == 1):
+            print("Gurobi...", end=" ", flush=True)
+        
+        print(room_num, end=" ", flush=True)
         m.optimize()
         #the variables are in m.getVars()
         if return_rooms:
@@ -165,6 +212,7 @@ def lp(happiness, stress, s_max, n, room_num, return_rooms=True, alternate_param
             for v in all_vars:
                 if v.varName[0] == 'g' and int(v.x) == 1:
                     desired_vars.append(v.varName)
+            #print(desired_vars)
             ans = {}
             for v in desired_vars:
                 x = v.split('_', 1)[1].split(",")
@@ -173,7 +221,7 @@ def lp(happiness, stress, s_max, n, room_num, return_rooms=True, alternate_param
         return m.objVal, []
     except gp.GurobiError as e:
         #print("Error Code " + str(e.errno) + ": " + str(e))
-        return None, None
+        return 0, []
     except AttributeError:
         #print("Encountered an attribute error")
-        return None, None
+        return 0, []

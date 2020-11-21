@@ -84,3 +84,26 @@ def calculate_happiness_for_room(arr, G):
     """
     H = G.subgraph(arr)
     return H.size("happiness")
+
+def order(arr):
+    '''
+        Reorders optimal room array so it looks like the brute force output.
+    '''
+    num_rooms = -1
+    for i in arr:
+        num_rooms = max(num_rooms, arr[i])
+    ordered_array = [[] for i in range(num_rooms + 1)]
+    for key in arr:
+        ordered_array[arr[key]].append(key)
+    ordered_array[:] = [x for x in ordered_array if x != []]
+    ordered_array.sort(key = lambda x: x[0])
+    return ordered_array, len(ordered_array)
+
+
+def prettyprint(happiness, stress):
+    """
+        Prints happiness and stress values that are valid for file output.
+    """
+    for key in happiness:
+        for val in happiness[key]:
+            print(key, val, happiness[key][val], stress[key][val])

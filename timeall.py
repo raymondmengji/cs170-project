@@ -1,6 +1,6 @@
 import networkx as nx
 from parse import read_input_file, write_output_file
-from utils import is_valid_solution, calculate_happiness
+from utils import is_valid_solution, calculate_happiness, order, prettyprint
 import sys
 import glob
 import os
@@ -19,17 +19,6 @@ import time
     Runs all input files and prints the time it takes to complete them.
     Useful to see which inputs are the slowest for a given size.
 """
-
-def order(arr, size):
-    '''
-        Reorders optimal room array so it looks like the brute force output.
-    '''
-    ordered_array = [[] for i in range(size)]
-    for key in arr:
-        ordered_array[arr[key]].append(key)
-    ordered_array.sort(key = lambda x: x[0])
-    return ordered_array
-
 
 def solve(G, s):
     """
@@ -61,28 +50,19 @@ def solve(G, s):
         print("Brute Force Approach Time:", end_time - start_time)
 
     #ILP 
-    answer = -1
-    best_k = 0
-    rooms  = {}
     start_time = time.perf_counter()
-    for k in range(1, n + 1):
-        val, arr = lp.lp(happiness, stress, s, n, k)
-        if val is not None and val > answer:
-            answer = val
-            rooms  = arr
-            best_k = k
+    answer, rooms, best_k = lp.lp_solve(happiness, stress, s, n)
     end_time = time.perf_counter()
-    answer = round(answer, 3)
 
     print("Gurobi Approach Time:     ", end_time - start_time)
     print("Gurobi Answer:            ", answer)
     print("Gurobi Rooms (raw):       ", rooms, best_k)
-    print("Gurobi Rooms:", order(rooms, best_k))
+    print("Gurobi Rooms:", order(rooms)[0])
     if n <= 10:
         #assert bf_val == answer, "Incorrect computation"
         print("Brutef Rooms:", bf_arr)
         print("Brutef Answer:", bf_val)
-    return rooms, best_k
+    return rooms, order(rooms)[1]
     
 # For testing a folder of inputs to create a folder of outputs, you can use glob (need to import it)
 if __name__ == '__main__':

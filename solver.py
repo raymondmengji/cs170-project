@@ -1,6 +1,6 @@
 import networkx as nx
 from parse import read_input_file, write_output_file
-from utils import is_valid_solution, calculate_happiness
+from utils import is_valid_solution, calculate_happiness, order, prettyprint
 import sys
 import glob
 import os
@@ -10,16 +10,6 @@ from gurobipy import GRB
 import bruteforce
 import lp
 import random
-
-def order(arr, size):
-    '''
-        Reorders optimal room array so it looks like the brute force output.
-    '''
-    ordered_array = [[] for i in range(size)]
-    for key in arr:
-        ordered_array[arr[key]].append(key)
-    ordered_array.sort(key = lambda x: x[0])
-    return ordered_array
 
 def solve(G, s):
     """
@@ -51,19 +41,8 @@ def solve(G, s):
             for person in bf_arr[i]:
                 assignments[person] = i
         return assignments, len(bf_arr)
-
     elif n == 20 or n == 50:
-        answer = -1
-        best_k = 0
-        rooms  = {}
-        for k in range(1, n + 1):
-            val, arr = lp.lp(happiness, stress, s, n, k)
-            if val is not None and val > answer:
-                print("Better Answer:", val, arr, k)
-                answer = val
-                rooms  = arr
-                best_k = k
-        answer = round(answer, 3)
+        answer, rooms, best_k = lp.lp_solve(happiness, stress, s, n)
         return rooms, best_k
     else:
         return "Graph sizes that aren't <=10, 20, or 50 nodes aren't accepted"
