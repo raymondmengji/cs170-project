@@ -4,9 +4,7 @@ from utils import is_valid_solution, calculate_happiness, order, prettyprint
 import sys
 import glob
 import os
-
-import gurobipy as gp
-from gurobipy import GRB
+import numpy as np
 import bruteforce
 import lp
 import random
@@ -20,6 +18,7 @@ import time
     Useful to see which inputs are the slowest for a given size.
 """
 
+times = []
 def solve(G, s):
     """
     Args:
@@ -53,10 +52,10 @@ def solve(G, s):
     start_time = time.perf_counter()
     answer, rooms, best_k = lp.lp_solve(happiness, stress, s, n)
     end_time = time.perf_counter()
-
+    times.append(end_time - start_time)
     print("Gurobi Approach Time:     ", end_time - start_time)
     print("Gurobi Answer:            ", answer)
-    print("Gurobi Rooms (raw):       ", rooms, best_k)
+    #print("Gurobi Rooms (raw):       ", rooms, best_k)
     print("Gurobi Rooms:", order(rooms)[0])
     if n <= 10:
         #assert bf_val == answer, "Incorrect computation"
@@ -74,5 +73,7 @@ if __name__ == '__main__':
         D, k = solve(G, s)
         assert is_valid_solution(D, G, s, k)
         print("Total Happiness: {}".format(calculate_happiness(D, G)))
-        print("\n")
+        print()
         write_output_file(D, output_path)
+    print("Times:", times[:-1])
+    print("Avg Times", np.mean(times[:-1]))

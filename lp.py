@@ -45,14 +45,15 @@ def lp(happiness, stress, s_max, n, room_num, cutoff,
         m.setParam("OutputFlag", 0)
         m.setParam("TuneOutput", 0)
         if optimize_parameters:
-            m.setParam("Method", 3)
-            m.setParam("FeasibilityTol", 1e-3)
-            m.setParam("IntFeasTol", 1e-3)
-            m.setParam("Heuristics", 0)
+            pass
+            m.setParam("Method", 5)
+            m.setParam("FeasibilityTol", 1e-4)
+            m.setParam("IntFeasTol", 1e-4)
+            m.setParam("Heuristics", 0.05)
             m.setParam("Cutoff", cutoff)
             #m.setParam("Presolve", 2)
-            m.setParam("TuneCriterion", 0)
-            m.setParam("SolutionLimit", 1)
+            #m.setParam("TuneCriterion", 0)
+            #m.setParam("SolutionLimit", 1) #bad for some reason
             #m.setParam("MIPGapAbs", 0.01)
             #m.setParam("MIPGap", 0.01)
             #m.setParam("BarConvTol", 1e-3)
