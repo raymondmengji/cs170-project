@@ -88,16 +88,25 @@ def lp(happiness, stress, s_max, n, room_num, cutoff,
             for u in range(n):
                 temp_edge_indicators[k][u] = {}
                 for v in range(u+1, n):
-                    temp_edge_indicators[k][u][v] = m.addVar(vtype=GRB.BINARY, name="e_" + str(k) + "-" + str(u) + "," + str(v))
-                    temp = temp_edge_indicators[k][u][v]
+                    # temp_edge_indicators[k][u][v] = m.addVar(vtype=GRB.BINARY, name="e_" + str(k) + "-" + str(u) + "," + str(v))
+                    # temp = temp_edge_indicators[k][u][v]
+                    # u_room_indicator = g[k][u]
+                    # v_room_indicator = g[k][v]
+                    # m.addConstr(temp >= u_room_indicator + v_room_indicator - 1, "c" + str(constraintCounter))
+                    # constraintCounter += 1
+                    # m.addConstr(temp <= u_room_indicator, "c" + str(constraintCounter))
+                    # constraintCounter += 1
+                    # m.addConstr(temp <= v_room_indicator, "c" + str(constraintCounter))
+                    # constraintCounter += 1
+                    # m.addConstr(temp >= 0, "c" + str(constraintCounter))
+                    # constraintCounter += 1
+                    # m.addConstr(temp <= 1, "c" + str(constraintCounter))
+                    # constraintCounter += 1
+
                     u_room_indicator = g[k][u]
                     v_room_indicator = g[k][v]
-                    m.addConstr(temp >= u_room_indicator + v_room_indicator - 1, "c" + str(constraintCounter))
-                    constraintCounter += 1
-                    m.addConstr(temp <= u_room_indicator, "c" + str(constraintCounter))
-                    constraintCounter += 1
-                    m.addConstr(temp <= v_room_indicator, "c" + str(constraintCounter))
-                    constraintCounter += 1
+                    temp = gp.QuadExpr(u_room_indicator * v_room_indicator)
+                    temp_edge_indicators[k][u][v] = temp
                     m.addConstr(temp >= 0, "c" + str(constraintCounter))
                     constraintCounter += 1
                     m.addConstr(temp <= 1, "c" + str(constraintCounter))
