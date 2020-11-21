@@ -41,8 +41,8 @@ def timeTest(n, num_repetitions=10):
         #generate graph
         s = round(random.uniform(90, 100), 3)
         #generate a random interval each time
-        lower = 0#random.randrange(1, 10)
-        upper = 10#random.randrange(10, 20)
+        lower = 10#random.randrange(1, 10)
+        upper = 20#random.randrange(10, 20)
         for u in range(n):
             happiness[u] = {}
             stress[u] = {}

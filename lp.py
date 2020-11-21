@@ -46,7 +46,7 @@ def lp(happiness, stress, s_max, n, room_num, cutoff,
         m.setParam("TuneOutput", 0)
         if optimize_parameters:
             pass
-            m.setParam("Method", 5)
+            m.setParam("Method", 0)
             m.setParam("FeasibilityTol", 1e-4)
             m.setParam("IntFeasTol", 1e-4)
             m.setParam("Heuristics", 0.05)
@@ -83,34 +83,33 @@ def lp(happiness, stress, s_max, n, room_num, cutoff,
         temp_edge_indicators = {}
         for i in range(room_num):
             temp_edge_indicators[i] = {}
-
         for k in range(room_num):
             for u in range(n):
                 temp_edge_indicators[k][u] = {}
                 for v in range(u+1, n):
-                    # temp_edge_indicators[k][u][v] = m.addVar(vtype=GRB.BINARY, name="e_" + str(k) + "-" + str(u) + "," + str(v))
-                    # temp = temp_edge_indicators[k][u][v]
-                    # u_room_indicator = g[k][u]
-                    # v_room_indicator = g[k][v]
-                    # m.addConstr(temp >= u_room_indicator + v_room_indicator - 1, "c" + str(constraintCounter))
-                    # constraintCounter += 1
-                    # m.addConstr(temp <= u_room_indicator, "c" + str(constraintCounter))
-                    # constraintCounter += 1
-                    # m.addConstr(temp <= v_room_indicator, "c" + str(constraintCounter))
-                    # constraintCounter += 1
-                    # m.addConstr(temp >= 0, "c" + str(constraintCounter))
-                    # constraintCounter += 1
-                    # m.addConstr(temp <= 1, "c" + str(constraintCounter))
-                    # constraintCounter += 1
-
+                    temp_edge_indicators[k][u][v] = m.addVar(vtype=GRB.BINARY, name="e_" + str(k) + "-" + str(u) + "," + str(v))
+                    temp = temp_edge_indicators[k][u][v]
                     u_room_indicator = g[k][u]
                     v_room_indicator = g[k][v]
-                    temp = gp.QuadExpr(u_room_indicator * v_room_indicator)
-                    temp_edge_indicators[k][u][v] = temp
+                    m.addConstr(temp >= u_room_indicator + v_room_indicator - 1, "c" + str(constraintCounter))
+                    constraintCounter += 1
+                    m.addConstr(temp <= u_room_indicator, "c" + str(constraintCounter))
+                    constraintCounter += 1
+                    m.addConstr(temp <= v_room_indicator, "c" + str(constraintCounter))
+                    constraintCounter += 1
                     m.addConstr(temp >= 0, "c" + str(constraintCounter))
                     constraintCounter += 1
                     m.addConstr(temp <= 1, "c" + str(constraintCounter))
                     constraintCounter += 1
+
+                    #u_room_indicator = g[k][u]
+                    #v_room_indicator = g[k][v]
+                    #temp = gp.QuadExpr(u_room_indicator * v_room_indicator)
+                    #temp_edge_indicators[k][u][v] = temp
+                    #m.addConstr(temp >= 0, "c" + str(constraintCounter))
+                    #constraintCounter += 1
+                    #m.addConstr(temp <= 1, "c" + str(constraintCounter))
+                    #constraintCounter += 1
 
         for u in range(n):
             for v in range(u+1, n):
