@@ -47,9 +47,9 @@ def timeTest(n, num_repetitions=10):
             happiness[u] = {}
             stress[u] = {}
             for v in range(u + 1, n):
-                happiness[u][v] = round(random.uniform(30, 60), 3)  #URV [1, 5] is best
+                happiness[u][v] = round(random.uniform(10, 15), 3)  #URV [1, 5] is best
                 #force everyone in their own groups by setting stress[u][v] to 101
-                stress[u][v]    = round(random.uniform(10, 15), 3) #URV [1, 5] is best
+                stress[u][v]    = round(random.uniform(5, 15), 3) #URV [1, 5] is best
 
         #ILP Time, optimized
         start_time = time.perf_counter()
@@ -73,7 +73,7 @@ def timeTest(n, num_repetitions=10):
             end_time = time.perf_counter()
             bf_time = end_time - start_time
         
-        if gurobi_time > slowest_time:
+        if True or gurobi_time > slowest_time:
             print(n)
             print(s)
             print(prettyprint(happiness, stress))
