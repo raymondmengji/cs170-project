@@ -41,15 +41,15 @@ def timeTest(n, num_repetitions=10):
         #generate graph
         s = round(random.uniform(90, 100), 3)
         #generate a random interval each time
-        lower = 0#random.randrange(1, 10)
-        upper = 10#random.randrange(10, 20)
+        lower = 10#random.randrange(1, 10)
+        upper = 20#random.randrange(10, 20)
         for u in range(n):
             happiness[u] = {}
             stress[u] = {}
             for v in range(u + 1, n):
-                happiness[u][v] = round(random.uniform(lower, upper), 3)  #URV [1, 5] is best
+                happiness[u][v] = round(random.uniform(30, 60), 3)  #URV [1, 5] is best
                 #force everyone in their own groups by setting stress[u][v] to 101
-                stress[u][v]    = round(random.uniform(lower, upper), 3) #URV [1, 5] is best
+                stress[u][v]    = round(random.uniform(10, 15), 3) #URV [1, 5] is best
 
         #ILP Time, optimized
         start_time = time.perf_counter()

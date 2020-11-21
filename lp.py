@@ -41,26 +41,30 @@ def lp(happiness, stress, s_max, n, room_num, cutoff,
     return_rooms=True, optimize_parameters=True):
     try:
         #model
-        m = gp.Model("mip1")
+        m = gp.Model("MIP")
         m.setParam("OutputFlag", 0)
         m.setParam("TuneOutput", 0)
         if optimize_parameters:
-            pass
-            m.setParam("Method", 5)
+            m.setParam("Method", 3)
             m.setParam("FeasibilityTol", 1e-4)
             m.setParam("IntFeasTol", 1e-4)
-            m.setParam("Heuristics", 0.05)
+            m.setParam("Heuristics", 0)
             m.setParam("Cutoff", cutoff)
+            m.setParam("Quad", 0)
             #m.setParam("Presolve", 2)
             #m.setParam("TuneCriterion", 0)
             #m.setParam("SolutionLimit", 1) #bad for some reason
-            #m.setParam("MIPGapAbs", 0.01)
-            #m.setParam("MIPGap", 0.01)
+            m.setParam("MIPGapAbs", 0.1)
+            m.setParam("DisplayInterval", 10)
+            m.setParam("Cuts", 0)
+            #m.setParam("MIPGap", 1)
             #m.setParam("BarConvTol", 1e-3)
             #m.setParam("NodeMethod", 2)
             #m.setParam("Symmetry", 2)
-            #m.setParam("Disconnected", 0)
-            #m.setParam("MIPFocus", 2)
+            m.setParam("Disconnected", 0)
+            #m.setParam("Presolve", 2)
+            m.setParam("MIPFocus", 2)
+        m.setParam("OutputFlag", 1)
         constraintCounter = 0
         varCounter = 0
 
@@ -205,19 +209,30 @@ def lp(happiness, stress, s_max, n, room_num, cutoff,
             print("Gurobi...", end=" ", flush=True)
         
         print(room_num, end=" ", flush=True)
-        m.optimize()
+        m = m.presolve()
+        print("Presolve Done", flush=True)
+        status = m.optimize()
+
+        if GRB.OPTIMAL == 2:
+            print("* Optimal", end="", flush=True)
+        elif GRB.OPTIMAL == 13:
+            print("* Suboptimal", end="", flush=True)
+        elif GRB.OPTIMAL == 9:
+            print("* TLE, Best suboptimal was:", end="", flush=True)
+
         #the variables are in m.getVars()
+        all_vars = m.getVars()
+        desired_vars = []
+        for v in all_vars:
+            if v.varName[0] == 'g' and int(v.x) == 1:
+                desired_vars.append(v.varName)
+        #print(desired_vars)
+        ans = {}
+        for v in desired_vars:
+            x = v.split('_', 1)[1].split(",")
+            ans[int(x[0])] = int(x[1])
+
         if return_rooms:
-            all_vars = m.getVars()
-            desired_vars = []
-            for v in all_vars:
-                if v.varName[0] == 'g' and int(v.x) == 1:
-                    desired_vars.append(v.varName)
-            #print(desired_vars)
-            ans = {}
-            for v in desired_vars:
-                x = v.split('_', 1)[1].split(",")
-                ans[int(x[0])] = int(x[1])
             return m.objVal, ans
         return m.objVal, []
     except gp.GurobiError as e:
