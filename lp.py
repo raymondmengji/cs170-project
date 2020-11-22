@@ -34,7 +34,7 @@ def lp_solve(happiness, stress, s_max, n, optimize=True):
             for v in range(u+1, n):
                 if stress[u][v] > s_max / k:
                     pruned[(u, v)] = stress[u][v] #add pair to pruned
-        print(pruned)
+        # print(pruned)
 
         val, arr = lp(happiness, stress, s_max, n, k, answer, pruned, optimize_parameters=optimize)
         #print("value found", round(val, 3))
@@ -224,8 +224,8 @@ def lp(happiness, stress, s_max, n, room_num, cutoff, pruned, return_rooms=True,
         arr = []
         for u in e.keys():
             for v in e[u].keys():
-                # if (u, v) in pruned:
-                #     continue
+                if (u, v) in pruned:
+                    continue
                 arr.append(e[u][v] * happiness[u][v])
         m.setObjective(gp.quicksum(arr), GRB.MAXIMIZE)
 
