@@ -33,7 +33,8 @@ def lp_solve(happiness, stress, s_max, n, optimize=True):
         for u in range(n):
             for v in range(u+1, n):
                 if stress[u][v] > s_max / k:
-                    pruned[(u, v)] = 1 #add pair to pruned
+                    pruned[(u, v)] = stress[u][v] #add pair to pruned
+        print(pruned)
 
         val, arr = lp(happiness, stress, s_max, n, k, answer, pruned, optimize_parameters=optimize)
         #print("value found", round(val, 3))
@@ -72,7 +73,7 @@ def lp(happiness, stress, s_max, n, room_num, cutoff, pruned, return_rooms=True,
             #m.setParam("SolutionNumber", 0)
             #m.setParam("Presolve", 1)
             m.setParam("MIPFocus", 2)
-        m.setParam("OutputFlag", 1)
+        m.setParam("OutputFlag", 0)
         constraintCounter = 0
         varCounter = 0
 
@@ -91,6 +92,7 @@ def lp(happiness, stress, s_max, n, room_num, cutoff, pruned, return_rooms=True,
             e[u] = {}
             for v in range(u+1, n):
                 if (u, v) in pruned:
+                    e[u][v] = 0
                     continue
                 e[u][v] = m.addVar(vtype=GRB.BINARY, name="e_" + str(u) + "," + str(v))
         
@@ -102,8 +104,14 @@ def lp(happiness, stress, s_max, n, room_num, cutoff, pruned, return_rooms=True,
             for u in range(n):
                 temp_edge_indicators[k][u] = {}
                 for v in range(u+1, n):
-                    if (u, v) in pruned:
-                        continue
+                    # if (u, v) in pruned:
+                    #     temp_edge_indicators[k][u][v] = m.addVar(vtype=GRB.BINARY, name="e_" + str(k) + "-" + str(u) + "," + str(v))
+                    #     temp = temp_edge_indicators[k][u][v]
+                    #     m.addConstr(temp >= 0, "c" + str(constraintCounter))
+                    #     constraintCounter += 1
+                    #     m.addConstr(temp <= 0, "c" + str(constraintCounter))
+                    #     constraintCounter += 1
+                    #     continue
                     temp_edge_indicators[k][u][v] = m.addVar(vtype=GRB.BINARY, name="e_" + str(k) + "-" + str(u) + "," + str(v))
                     temp = temp_edge_indicators[k][u][v]
                     u_room_indicator = g[k][u]
@@ -121,8 +129,8 @@ def lp(happiness, stress, s_max, n, room_num, cutoff, pruned, return_rooms=True,
 
         for u in range(n):
             for v in range(u+1, n):
-                if (u, v) in pruned:
-                    continue
+                # if (u, v) in pruned:
+                #     continue
                 indicators = []
                 for k in range(room_num):
                     indicators.append(temp_edge_indicators[k][u][v])
@@ -196,8 +204,8 @@ def lp(happiness, stress, s_max, n, room_num, cutoff, pruned, return_rooms=True,
             room_arr = []
             for u in range(n):
                 for v in range(u+1, n):
-                    if (u, v) in pruned:
-                        continue
+                    # if (u, v) in pruned:
+                    #     continue
                     room_arr.append(stress[u][v]*temp_edge_indicators[k][u][v])
             m.addConstr(gp.quicksum(room_arr) <= s_max/room_num, "c"+str(constraintCounter))
             constraintCounter += 1
@@ -216,8 +224,8 @@ def lp(happiness, stress, s_max, n, room_num, cutoff, pruned, return_rooms=True,
         arr = []
         for u in e.keys():
             for v in e[u].keys():
-                if (u, v) in pruned:
-                    continue
+                # if (u, v) in pruned:
+                #     continue
                 arr.append(e[u][v] * happiness[u][v])
         m.setObjective(gp.quicksum(arr), GRB.MAXIMIZE)
 
@@ -228,7 +236,7 @@ def lp(happiness, stress, s_max, n, room_num, cutoff, pruned, return_rooms=True,
         
         print(room_num, end=" ", flush=True)
         
-        print(m.printStats())
+        # print(m.printStats())
         status = m.optimize()
         #print("Presolve Done", flush=True)
         if GRB.OPTIMAL == m.status:
