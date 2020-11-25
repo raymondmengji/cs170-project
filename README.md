@@ -24,16 +24,17 @@ solver.py  - Runs all files in samples/inputs and prints the highest valid Total
 
 timeall.py - Same as solver.py, but also prints diagnostic data about speed and room distributions for each file
 
-timetest.py n k - Randomly generates k graphs with n nodes and prints diagnostic data about its performance. 
-Useful to test hard inputs
+timetest.py (n) (k=10) - Randomly generates k graphs (default 10) with n nodes and prints diagnostic data about its performance. 
+Useful to test/generate hard inputs
 
 ## LP Solver
 We used the Gurobi optimizer, which is freely available for students. 
 
+## LP Construction
+We created our LP based on the conditions seen in the constraints.pdf file.
+
 ## Resources Used
 https://arxiv.org/pdf/1802.07144.pdf
-
-https://codereview.stackexchange.com/questions/1526/
 
 https://www.gurobi.com/
 

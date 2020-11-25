@@ -65,11 +65,16 @@ def solve(G, s):
 # For testing a folder of inputs to create a folder of outputs, you can use glob (need to import it)
 if __name__ == '__main__':
     inputs = glob.glob('samples/inputs/*')
+    num_inputs = len(inputs)
+    i = 1
     for input_path in inputs:
         output_path = 'samples/outputs/' + os.path.basename(os.path.normpath(input_path))[:-3] + '.out'
         G, s = read_input_file(input_path, 100)
         D, k = solve(G, s)
+        print("Input", i, "out of", str(num_inputs) + "...")
+        i += 1
         assert is_valid_solution(D, G, s, k)
         print("Total Happiness: {}".format(calculate_happiness(D, G)))
-        print("\n")
+        print()
+
         write_output_file(D, output_path)

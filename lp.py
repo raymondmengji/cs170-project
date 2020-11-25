@@ -3,7 +3,7 @@ from gurobipy import GRB
 import bruteforce
 
 def lp_solve(happiness, stress, s_max, n, optimize=True):
-    answer = 0
+    answer = 0 
     best_k = n
     rooms  = {i: i for i in range(n)}
 
@@ -49,8 +49,6 @@ def lp(happiness, stress, s_max, n, room_num, cutoff, pruned, return_rooms=True,
     try:
         #model
         m = gp.Model("MIP")
-        m.setParam("OutputFlag", 0)
-        m.setParam("TuneOutput", 0)
         if optimize_parameters:
             m.setParam("Method", 1)
             m.setParam("FeasibilityTol", 1e-4)
@@ -61,19 +59,19 @@ def lp(happiness, stress, s_max, n, room_num, cutoff, pruned, return_rooms=True,
             #m.setParam("Presolve", 2)
             #m.setParam("TuneCriterion", 0)
             #m.setParam("SolutionLimit", 1) #bad for some reason
-            m.setParam("MIPGapAbs", 0.1)
-            m.setParam("DisplayInterval", 10)
-            m.setParam("Cuts", 0)
-            m.setParam("TimeLimit", 300)
+            #m.setParam("MIPGapAbs", 0.1)
+            m.setParam("DisplayInterval", 20)
+            #m.setParam("Cuts", 0)
+            #m.setParam("TimeLimit", 300)
             #m.setParam("MIPGap", 1)
             #m.setParam("BarConvTol", 1e-3)
             #m.setParam("NodeMethod", 2)
             #m.setParam("Symmetry", 2)
-            m.setParam("Disconnected", 0)
+            #m.setParam("Disconnected", 0)
             #m.setParam("SolutionNumber", 0)
             #m.setParam("Presolve", 1)
-            m.setParam("MIPFocus", 2)
-        m.setParam("OutputFlag", 0)
+            #m.setParam("MIPFocus", 2)
+        m.setParam("OutputFlag", 1)
         constraintCounter = 0
         varCounter = 0
 

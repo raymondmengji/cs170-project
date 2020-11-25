@@ -75,5 +75,5 @@ if __name__ == '__main__':
         print("Total Happiness: {}".format(calculate_happiness(D, G)))
         print()
         write_output_file(D, output_path)
-    print("Times:", times[:-1])
-    print("Avg Times", np.mean(times[:-1]))
+    print("Times:", times)
+    print("Avg Times", np.mean(times))
