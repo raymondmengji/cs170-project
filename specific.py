@@ -56,12 +56,14 @@ if __name__ == '__main__':
     orig_val = float(sys.argv[2])
     best_val = orig_val
     D = {}
+    k = -1
     if len(sys.argv) == 3: #redo all values k for input
         for i in range(1, G.order() + 1):
-           val, rooms, k = specific(G, best_val, i, s)
-           if val > best_val:
-               best_val = val
-               D = rooms
+            val, rooms, curr_k = specific(G, best_val, i, s)
+            if val > best_val:
+                best_val = val
+                D = rooms
+                k = curr_k
         if best_val > orig_val:
             print()
             happiness = calculate_happiness(D, G)
@@ -76,10 +78,11 @@ if __name__ == '__main__':
     elif len(sys.argv) > 3:
         vals = [int(k) for k in sys.argv[3:]]
         for i in vals:
-            val, rooms, k = specific(G, best_val, i, s)
+            val, rooms, curr_k = specific(G, best_val, i, s)
             if val > best_val:
                 best_val = val
                 D = rooms
+                k = curr_k
         if best_val > orig_val:
             print()
             happiness = calculate_happiness(D, G)
