@@ -35,7 +35,7 @@ def solve(G, s):
 
     if n <= 10:
         bf_arr, bf_val = bruteforce.bruteforce(happiness, stress, len(list(happiness.keys())), s)
-        bf_val = round(bf_val, 3)
+        bf_val = bf_val
         assignments = {}
         for i in range(len(bf_arr)):
             for person in bf_arr[i]:
@@ -69,7 +69,6 @@ if __name__ == '__main__':
     num_inputs = len(inputs)
     i = 40
     for input_path in inputs[40:80]:
-        input_path = "medium/medium-123.in"
         print("Filename:", input_path, "Input", i, "out of", str(num_inputs) + "...")
         i += 1
         output_path = 'medium_outputs/' + os.path.basename(os.path.normpath(input_path))[:-3] + '.out'
@@ -80,6 +79,5 @@ if __name__ == '__main__':
         assert is_valid_solution(D, G, s, k)
         print("Total Happiness: {}".format(calculate_happiness(D, G)))
         print()
-        exit() 
 
         write_output_file(D, output_path)

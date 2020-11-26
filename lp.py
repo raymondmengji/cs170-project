@@ -16,7 +16,7 @@ def lp_solve(happiness, stress, s_max, n, optimize=True):
     if n == 20:
         bruteforce_nums = [1,2,17,18,19]
     elif n == 50:
-        bruteforce_nums = [1, 48, 49]
+        bruteforce_nums = [1,48,49]
     
     nonbruteforce_nums = [i for i in range(1, n) if i not in bruteforce_nums]
     print("Bruteforce...", end=" ", flush=True)
@@ -25,7 +25,7 @@ def lp_solve(happiness, stress, s_max, n, optimize=True):
         #print("value found", round(val, 3))
         if val > answer:
             print("*", end="", flush=True)
-            answer = round(val, 3)
+            answer = val
             rooms = arr
             best_k = k
         print("", end=" ", flush=True)
@@ -45,14 +45,15 @@ def lp_solve(happiness, stress, s_max, n, optimize=True):
         if not_optimal:
             suboptimal.append(k)
         if val > answer:
+            #print(val, arr)
             print("*", end="", flush=True)
-            answer = round(val, 3)
+            answer = val
             rooms  = arr
             best_k = k   
         print(")", end=" ", flush=True)
     print()
     print("SUBOPTIMAL K:", suboptimal)
-    return round(answer, 3), rooms, best_k
+    return answer, rooms, best_k
         
 def lp(happiness, stress, s_max, n, room_num, cutoff, pruned, return_rooms=True, optimize_parameters=True):
     try:
@@ -77,10 +78,10 @@ def lp(happiness, stress, s_max, n, room_num, cutoff, pruned, return_rooms=True,
             #m.setParam("BarConvTol", 1e-3)
             #m.setParam("NodeMethod", 2)
             #m.setParam("Symmetry", 2)
-            m.setParam("Disconnected", 0)
+            #m.setParam("Disconnected", 0)
             #m.setParam("SolutionNumber", 0)
             #m.setParam("Presolve", 1)
-            m.setParam("MIPFocus", 2)
+            #m.setParam("MIPFocus", 2)
         #m.setParam("OutputFlag", 1)
         constraintCounter = 0
         varCounter = 0
@@ -280,12 +281,12 @@ def lp(happiness, stress, s_max, n, room_num, cutoff, pruned, return_rooms=True,
         for v in all_vars:
             if v.varName[0] == 'g' and int(round(v.x, 2)) == 1:
                 desired_vars.append(v.varName)
-        print(desired_vars)
+        #print(desired_vars)
         ans = {}
         for v in desired_vars:
             x = v.split('_', 1)[1].split(",")
             ans[int(x[0])] = int(x[1])
-        print()
+        #print()
         if return_rooms:
             return m.objVal, ans, True
         return m.objVal, [], True
