@@ -51,11 +51,11 @@ if __name__ == '__main__':
     assert len(sys.argv) > 1
     input_path = sys.argv[1]
     output_path = 'medium_outputs/' + os.path.basename(os.path.normpath(input_path))[:-3] + '.out'
+    G, s = read_input_file(path)
+    orig_val = float(sys.argv[2])
+    best_val = orig_val
+    D = {}
     if len(sys.argv) == 3: #redo all values k for input
-        G, s = read_input_file(path)
-        orig_val = float(sys.argv[2])
-        best_val = orig_val
-        D = {}
         for i in range(G.order()):
            val, rooms, k = specific(G, best_val, i, s)
            if val > best_val:
@@ -72,9 +72,6 @@ if __name__ == '__main__':
         else:
             print('Could not improve max happiness')
     elif len(sys.argv) > 3:
-        orig_val = float(sys.argv[2])
-        best_val = orig_val
-        D = {}
         vals = [int(k) for k in sys.argv[3:]]
         for i in vals:
            val, rooms, k = specific(G, best_val, i, s)
