@@ -56,18 +56,17 @@ if __name__ == '__main__':
     best_val = orig_val
     D = {}
     if len(sys.argv) == 3: #redo all values k for input
-        for i in range(G.order()):
+        for i in range(1, G.order() + 1):
            val, rooms, k = specific(G, best_val, i, s)
            if val > best_val:
                best_val = val
                D = rooms
-        assert is_valid_solution(D, G, s, k)
-        happiness = calculate_happiness(D, G)
-        print(happiness, best_val)
-        assert round(happiness, 2) == round(best_val, 2)
-        assert is_valid_solution(D, G, s, k)
         print("Total Happiness: {}".format(calculate_happiness(D, G)))
         if best_val > orig_val:
+            print(happiness, best_val)
+            assert round(happiness, 2) == round(best_val, 2)
+            assert is_valid_solution(D, G, s, k)
+            happiness = calculate_happiness(D, G)
             write_output_file(D, output_path)
         else:
             print('Could not improve max happiness')
