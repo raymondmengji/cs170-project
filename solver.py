@@ -66,18 +66,23 @@ def solve(G, s):
 if __name__ == '__main__':
     inputs = glob.glob('medium/*')
     inputs.sort()
+    redo = []
     num_inputs = len(inputs)
-    i = 40
-    for input_path in inputs[40:80]:
+    i = 80
+    for input_path in inputs[81:120]:
         print("Filename:", input_path, "Input", i, "out of", str(num_inputs) + "...")
         i += 1
         output_path = 'medium_outputs/' + os.path.basename(os.path.normpath(input_path))[:-3] + '.out'
         G, s = read_input_file(input_path, 100)
         D, k, val = solve(G, s)
-        happiness = calculate_happiness(D, G)
-        assert round(happiness, 3) == round(val, 3)
-        assert is_valid_solution(D, G, s, k)
-        print("Total Happiness: {}".format(calculate_happiness(D, G)))
-        print()
-
-        write_output_file(D, output_path)
+        if D:
+            print(D, k, val)
+            happiness = calculate_happiness(D, G)
+            assert round(happiness, 3) == round(val, 3)
+            assert is_valid_solution(D, G, s, k)
+            print("Total Happiness: {}".format(calculate_happiness(D, G)))
+            print()
+            write_output_file(D, output_path)
+        else:
+            redo.append(input_path)
+    print("Need to Redo:", redo)
