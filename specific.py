@@ -36,7 +36,7 @@ def specific(G, best_val, k, s_max):
     # print(pruned)
     print("(", end="", flush=True)
     #auto optimize
-    val, arr, not_optimal = lp(happiness, stress, s_max, n, k, answer, pruned)
+    val, arr, not_optimal = lp.lp(happiness, stress, s_max, n, k, answer, pruned)
     if val > answer:
         print("*", end="", flush=True)
         answer = val
