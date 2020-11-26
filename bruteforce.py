@@ -45,7 +45,7 @@ def bruteforce_k(happiness, stress, n, s_max, k):
     """
         Only brute forces solutions that uses k rooms
     """
-    print(k, end=" ", flush=True)
+    print(k, end="", flush=True)
 
     # corresponding max stress limit in room k:
     stress_limit      = s_max / k

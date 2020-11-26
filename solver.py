@@ -40,10 +40,10 @@ def solve(G, s):
         for i in range(len(bf_arr)):
             for person in bf_arr[i]:
                 assignments[person] = i
-        return assignments, len(bf_arr)
+        return assignments, len(bf_arr), bf_val
     elif n == 20 or n == 50:
         answer, rooms, best_k = lp.lp_solve(happiness, stress, s, n)
-        return rooms, best_k
+        return rooms, best_k, answer
     else:
         return "Graph sizes that aren't <=10, 20, or 50 nodes aren't accepted"
 
@@ -64,17 +64,22 @@ def solve(G, s):
 
 # For testing a folder of inputs to create a folder of outputs, you can use glob (need to import it)
 if __name__ == '__main__':
-    inputs = glob.glob('samples/inputs/*')
+    inputs = glob.glob('medium/*')
+    inputs.sort()
     num_inputs = len(inputs)
-    i = 1
-    for input_path in inputs:
-        output_path = 'samples/outputs/' + os.path.basename(os.path.normpath(input_path))[:-3] + '.out'
-        G, s = read_input_file(input_path, 100)
-        D, k = solve(G, s)
-        print("Input", i, "out of", str(num_inputs) + "...")
+    i = 40
+    for input_path in inputs[40:80]:
+        input_path = "medium/medium-123.in"
+        print("Filename:", input_path, "Input", i, "out of", str(num_inputs) + "...")
         i += 1
+        output_path = 'medium_outputs/' + os.path.basename(os.path.normpath(input_path))[:-3] + '.out'
+        G, s = read_input_file(input_path, 100)
+        D, k, val = solve(G, s)
+        happiness = calculate_happiness(D, G)
+        assert round(happiness, 3) == round(val, 3)
         assert is_valid_solution(D, G, s, k)
         print("Total Happiness: {}".format(calculate_happiness(D, G)))
         print()
+        exit() 
 
         write_output_file(D, output_path)
