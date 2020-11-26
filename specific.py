@@ -33,6 +33,7 @@ def specific(G, best_val, k, s_max):
         for v in range(u+1, n):
             if stress[u][v] > s_max / k:
                 pruned[(u, v)] = stress[u][v] #add pair to pruned
+
     # print(pruned)
     print("(", end="", flush=True)
     #auto optimize
@@ -61,29 +62,31 @@ if __name__ == '__main__':
            if val > best_val:
                best_val = val
                D = rooms
-        print("Total Happiness: {}".format(calculate_happiness(D, G)))
         if best_val > orig_val:
+            print()
+            happiness = calculate_happiness(D, G)
             print(happiness, best_val)
+            print("Total Happiness: {}".format(happiness))
             assert round(happiness, 2) == round(best_val, 2)
             assert is_valid_solution(D, G, s, k)
-            happiness = calculate_happiness(D, G)
+            print("Improved max happiness, from", orig_val, "to", best_val)
             write_output_file(D, output_path)
         else:
             print('Could not improve max happiness')
     elif len(sys.argv) > 3:
         vals = [int(k) for k in sys.argv[3:]]
         for i in vals:
-           val, rooms, k = specific(G, best_val, i, s)
-           if val > best_val:
-               best_val = val
-               D = rooms
-        assert is_valid_solution(D, G, s, k)
-        happiness = calculate_happiness(D, G)
-        print(happiness, best_val)
-        assert round(happiness, 2) == round(best_val, 2)
-        assert is_valid_solution(D, G, s, k)
-        print("Total Happiness: {}".format(calculate_happiness(D, G)))
+            val, rooms, k = specific(G, best_val, i, s)
+            if val > best_val:
+                best_val = val
+                D = rooms
         if best_val > orig_val:
+            print()
+            happiness = calculate_happiness(D, G)
+            print(happiness, best_val)
+            print("Total Happiness: {}".format(happiness))
+            assert round(happiness, 2) == round(best_val, 2)
+            assert is_valid_solution(D, G, s, k)
             print("Improved max happiness, from", orig_val, "to", best_val)
             write_output_file(D, output_path)
         else:
