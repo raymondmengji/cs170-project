@@ -73,7 +73,7 @@ def lp(happiness, stress, s_max, n, room_num, cutoff, pruned, return_rooms=True,
             #m.setParam("MIPGapAbs", 0.1)
             m.setParam("DisplayInterval", 20)
             #m.setParam("Cuts", 0)
-            m.setParam("TimeLimit", 300)
+            #m.setParam("TimeLimit", 3600)
             #m.setParam("MIPGap", 1)
             #m.setParam("BarConvTol", 1e-3)
             #m.setParam("NodeMethod", 2)
@@ -82,7 +82,7 @@ def lp(happiness, stress, s_max, n, room_num, cutoff, pruned, return_rooms=True,
             #m.setParam("SolutionNumber", 0)
             #m.setParam("Presolve", 1)
             #m.setParam("MIPFocus", 2)
-        #m.setParam("OutputFlag", 1)
+        m.setParam("OutputFlag", 1)
         constraintCounter = 0
         varCounter = 0
 

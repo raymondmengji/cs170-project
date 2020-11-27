@@ -27,6 +27,18 @@ def specific(G, best_val, k, s_max):
     best_k = -1
     rooms  = {}
     
+    if k in [1,2,17,18,19]:
+        val, arr = bruteforce.bruteforce_k(happiness, stress, n, s_max, k)
+        if val > answer:
+            print("*", end="", flush=True)
+            answer = val
+            rooms = arr
+            best_k = k
+        else:
+            print("X", end="", flush=True)   
+        return answer, rooms, best_k
+
+
     #prune
     pruned = {}
     for u in range(n):
@@ -58,7 +70,7 @@ if __name__ == '__main__':
     D = {}
     k = -1
     if len(sys.argv) == 3: #redo all values k for input
-        for i in range(1, G.order() + 1):
+        for i in range(1, G.order()):
             val, rooms, curr_k = specific(G, best_val, i, s)
             if val > best_val:
                 best_val = val
