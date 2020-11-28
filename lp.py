@@ -275,7 +275,7 @@ def lp(happiness, stress, s_max, n, room_num, cutoff, pruned, return_rooms=True,
             return m.objVal, [], True
         else:
             print("I", end="", flush=True)
-            return 0, [], False
+            #return 0, [], False
         #the variables are in m.getVars()
         all_vars = m.getVars()
         desired_vars = []
