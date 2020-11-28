@@ -28,14 +28,16 @@ def specific(G, best_val, k, s_max):
     rooms  = {}
     
     if k in [1,2,17,18,19]:
+        print("(", end='', flush=True)
         val, arr = bruteforce.bruteforce_k(happiness, stress, n, s_max, k)
         if val > answer:
-            print("*", end="", flush=True)
+            print("*", end=",", flush=True)
             answer = val
             rooms = arr
             best_k = k
         else:
-            print("X", end="", flush=True)   
+            print("X", end=",", flush=True)
+        print(")", end="", flush=True)
         return answer, rooms, best_k
 
 
