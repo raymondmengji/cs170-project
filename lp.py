@@ -62,11 +62,11 @@ def lp(happiness, stress, s_max, n, room_num, cutoff, pruned, return_rooms=True,
         m.setParam("OutputFlag", 0)
         if optimize_parameters:
             m.setParam("Method", 1)
-            m.setParam("FeasibilityTol", 1e-4)
-            m.setParam("IntFeasTol", 1e-4)
+            #m.setParam("FeasibilityTol", 1e-4)
+            #m.setParam("IntFeasTol", 1e-4)
             #m.setParam("Heuristics", 0)
             m.setParam("Cutoff", cutoff)
-            m.setParam("Quad", 0)
+            #m.setParam("Quad", 0)
             #m.setParam("Presolve", 2)
             #m.setParam("TuneCriterion", 0)
             #m.setParam("SolutionLimit", 1) #bad for some reason
