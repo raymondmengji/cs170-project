@@ -105,17 +105,16 @@ def lp_cutoff(happiness, stress, s_max, n, cutoff):
 # For testing a folder of inputs to create a folder of outputs, you can use glob (need to import it)
 if __name__ == '__main__':
     #skip these (already optimal)
-    blacklist = [37,48,75,142,149,153,160,173,216,239,32, 238, 241, 232, 231, 223, 221, 210, 199, 198, 192, 170, 150, 144, 82, 72, 32, 30, 29, 17, 40, 179, 75, 142, 149, 153, 160, 173, 216, 239, 37] 
+    blacklist = [48, 75, 216, 173, 190, 239, 153, 149, 142, 160, 37, 32, 241, 238, 232, 231, 223, 221, 210, 199, 198, 192, 170, 150, 144, 82, 72, 30, 29, 17, 40, 179]
 
     inputs = glob.glob('medium/*')
     outputs = glob.glob('medium_outputs/*')
     inputs.sort()
     outputs.sort()
-    i = 80
     tle = []
     redo = []
     num_inputs = len(inputs)
-    for input_path in inputs[80:]:
+    for input_path in inputs:
         print("Filename:", input_path, "Input", i, "out of", str(num_inputs) + "...")
         i += 1
         output_path_num = int(os.path.basename(os.path.normpath(input_path))[:-3].split("-")[1])
