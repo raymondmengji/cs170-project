@@ -112,9 +112,10 @@ if __name__ == '__main__':
     inputs.sort()
     outputs.sort()
     tle = []
+    i = 3
     redo = []
     num_inputs = len(inputs)
-    for input_path in inputs:
+    for input_path in inputs[2:]:
         print("Filename:", input_path, "Input", i, "out of", str(num_inputs) + "...")
         i += 1
         output_path_num = int(os.path.basename(os.path.normpath(input_path))[:-3].split("-")[1])
@@ -133,7 +134,7 @@ if __name__ == '__main__':
         if D_new and round(val_new, 3) > round(output_happiness, 3):
             new_happiness = calculate_happiness(D_new, G)
             print(new_happiness, val_new)
-            assert round(new_happiness, 2) == round(val_new, 2)
+            assert round(new_happiness, 3) == round(val_new, 3)
             assert is_valid_solution(D_new, G, s, k_new)
             print("New Happiness Found:", new_happiness)
             print()
