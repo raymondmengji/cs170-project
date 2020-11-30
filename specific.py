@@ -65,7 +65,7 @@ def specific(G, best_val, k, s_max):
 if __name__ == '__main__':
     assert len(sys.argv) > 1
     input_path = sys.argv[1]
-    output_path = 'medium_outputs/' + os.path.basename(os.path.normpath(input_path))[:-3] + '.out'
+    output_path = 'large_outputs/' + os.path.basename(os.path.normpath(input_path))[:-3] + '.out'
     G, s = read_input_file(input_path)
     orig_val = float(sys.argv[2])
     best_val = orig_val

@@ -73,7 +73,7 @@ def lp(happiness, stress, s_max, n, room_num, cutoff, pruned, return_rooms=True,
             #m.setParam("MIPGapAbs", 0.1)
             m.setParam("DisplayInterval", 20)
             #m.setParam("Cuts", 0)
-            m.setParam("TimeLimit", 600)
+            #m.setParam("TimeLimit", 600)
             #m.setParam("MIPGap", 1)
             #m.setParam("BarConvTol", 1e-3)
             #m.setParam("NodeMethod", 2)
