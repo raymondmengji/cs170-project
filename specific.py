@@ -27,7 +27,7 @@ def specific(G, best_val, k, s_max):
     best_k = -1
     rooms  = {}
     
-    if k in [1,2,17,18,19]:
+    if (n == 20 and k in [1,2,17,18,19]) or (n == 50 and k in [1,48,49]):
         print("(", end='', flush=True)
         val, arr = bruteforce.bruteforce_k(happiness, stress, n, s_max, k)
         if val > answer:

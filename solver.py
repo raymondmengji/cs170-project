@@ -64,15 +64,20 @@ def solve(G, s):
 
 # For testing a folder of inputs to create a folder of outputs, you can use glob (need to import it)
 if __name__ == '__main__':
-    inputs = glob.glob('medium/*')
+    blacklist = [1, 48, 75, 216, 173, 190, 239, 153, 149, 142, 160, 37, 32, 241, 238, 232, 231, 223, 221, 210, 199, 198, 192, 170, 150, 144, 82, 72, 30, 29, 17, 40, 179]
+    inputs = glob.glob('large/*')
     inputs.sort()
     redo = []
     num_inputs = len(inputs)
-    i = 80
-    for input_path in inputs[81:120]:
+    i = 1
+    for input_path in inputs[:10]:
         print("Filename:", input_path, "Input", i, "out of", str(num_inputs) + "...")
         i += 1
-        output_path = 'medium_outputs/' + os.path.basename(os.path.normpath(input_path))[:-3] + '.out'
+        output_path_num = int(os.path.basename(os.path.normpath(input_path))[:-3].split("-")[1])
+        if output_path_num in blacklist:
+            print("Blacklisted num, will skip...")
+            continue
+        output_path = 'large_outputs/' + os.path.basename(os.path.normpath(input_path))[:-3] + '.out'
         G, s = read_input_file(input_path, 100)
         D, k, val = solve(G, s)
         if D:

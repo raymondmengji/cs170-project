@@ -18,7 +18,7 @@ def lp_solve(happiness, stress, s_max, n, optimize=True):
     elif n == 50:
         bruteforce_nums = [1,48,49]
     
-    nonbruteforce_nums = [i for i in range(1, n) if i not in bruteforce_nums]
+    nonbruteforce_nums = [2,3,4,5,6,7,8,9,10]#[i for i in range(1, n) if i not in bruteforce_nums]
     print("Bruteforce...", end=" ", flush=True)
     for k in bruteforce_nums:
         val, arr = bruteforce.bruteforce_k(happiness, stress, n, s_max, k)
@@ -59,21 +59,21 @@ def lp(happiness, stress, s_max, n, room_num, cutoff, pruned, return_rooms=True,
     try:
         #model
         m = gp.Model("MIP")
-        m.setParam("OutputFlag", 0)
+        #m.setParam("OutputFlag", 0)
         if optimize_parameters:
             m.setParam("Method", 1)
             #m.setParam("FeasibilityTol", 1e-4)
             #m.setParam("IntFeasTol", 1e-4)
             #m.setParam("Heuristics", 0)
             m.setParam("Cutoff", cutoff)
-            #m.setParam("Quad", 0)
+            m.setParam("Quad", 0)
             #m.setParam("Presolve", 2)
             #m.setParam("TuneCriterion", 0)
             #m.setParam("SolutionLimit", 1) #bad for some reason
             #m.setParam("MIPGapAbs", 0.1)
             m.setParam("DisplayInterval", 20)
             #m.setParam("Cuts", 0)
-            #m.setParam("TimeLimit", 3600)
+            m.setParam("TimeLimit", 600)
             #m.setParam("MIPGap", 1)
             #m.setParam("BarConvTol", 1e-3)
             #m.setParam("NodeMethod", 2)
@@ -81,8 +81,9 @@ def lp(happiness, stress, s_max, n, room_num, cutoff, pruned, return_rooms=True,
             #m.setParam("Disconnected", 0)
             #m.setParam("SolutionNumber", 0)
             #m.setParam("Presolve", 1)
-            #m.setParam("MIPFocus", 2)
-        m.setParam("OutputFlag", 1)
+            m.setParam("Threads", 24)
+            m.setParam("MIPFocus", 2)
+        #m.setParam("OutputFlag", 1)
         constraintCounter = 0
         varCounter = 0
 
