@@ -35,15 +35,15 @@ def solve(G, s):
 
     if n <= 10:
         bf_arr, bf_val = bruteforce.bruteforce(happiness, stress, len(list(happiness.keys())), s)
-        bf_val = round(bf_val, 3)
+        bf_val = bf_val
         assignments = {}
         for i in range(len(bf_arr)):
             for person in bf_arr[i]:
                 assignments[person] = i
-        return assignments, len(bf_arr)
+        return assignments, len(bf_arr), bf_val
     elif n == 20 or n == 50:
         answer, rooms, best_k = lp.lp_solve(happiness, stress, s, n)
-        return rooms, best_k
+        return rooms, best_k, answer
     else:
         return "Graph sizes that aren't <=10, 20, or 50 nodes aren't accepted"
 
@@ -64,17 +64,30 @@ def solve(G, s):
 
 # For testing a folder of inputs to create a folder of outputs, you can use glob (need to import it)
 if __name__ == '__main__':
-    inputs = glob.glob('samples/inputs/*')
+    blacklist = [1, 48, 75, 216, 173, 190, 239, 153, 149, 142, 160, 37, 32, 241, 238, 232, 231, 223, 221, 210, 199, 198, 192, 170, 150, 144, 82, 72, 30, 29, 17, 40, 179]
+    inputs = glob.glob('large/*')
+    inputs.sort()
+    redo = []
     num_inputs = len(inputs)
     i = 1
-    for input_path in inputs:
-        output_path = 'samples/outputs/' + os.path.basename(os.path.normpath(input_path))[:-3] + '.out'
-        G, s = read_input_file(input_path, 100)
-        D, k = solve(G, s)
-        print("Input", i, "out of", str(num_inputs) + "...")
+    for input_path in inputs[:10]:
+        print("Filename:", input_path, "Input", i, "out of", str(num_inputs) + "...")
         i += 1
-        assert is_valid_solution(D, G, s, k)
-        print("Total Happiness: {}".format(calculate_happiness(D, G)))
-        print()
-
-        write_output_file(D, output_path)
+        output_path_num = int(os.path.basename(os.path.normpath(input_path))[:-3].split("-")[1])
+        if output_path_num in blacklist:
+            print("Blacklisted num, will skip...")
+            continue
+        output_path = 'large_outputs/' + os.path.basename(os.path.normpath(input_path))[:-3] + '.out'
+        G, s = read_input_file(input_path, 100)
+        D, k, val = solve(G, s)
+        if D:
+            print(D, k, val)
+            happiness = calculate_happiness(D, G)
+            assert round(happiness, 3) == round(val, 3)
+            assert is_valid_solution(D, G, s, k)
+            print("Total Happiness: {}".format(calculate_happiness(D, G)))
+            print()
+            write_output_file(D, output_path)
+        else:
+            redo.append(input_path)
+    print("Need to Redo:", redo)

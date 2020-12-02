@@ -12,21 +12,25 @@ def lp_solve(happiness, stress, s_max, n, optimize=True):
     #if n <= 10, don't brute force anything (for testing purposes)
     #always brute force k = 1, n
     bruteforce_nums = []
+    suboptimal = []
     if n == 20:
         bruteforce_nums = [1,2,17,18,19]
     elif n == 50:
-        bruteforce_nums = [1, 48, 49]
+        bruteforce_nums = [1,48,49]
     
-    nonbruteforce_nums = [i for i in range(1, n) if i not in bruteforce_nums]
+    nonbruteforce_nums = [2,3,4,5,6,7,8,9,10]#[i for i in range(1, n) if i not in bruteforce_nums]
     print("Bruteforce...", end=" ", flush=True)
     for k in bruteforce_nums:
         val, arr = bruteforce.bruteforce_k(happiness, stress, n, s_max, k)
         #print("value found", round(val, 3))
         if val > answer:
-            answer = round(val, 3)
+            print("*", end="", flush=True)
+            answer = val
             rooms = arr
             best_k = k
+        print("", end=" ", flush=True)
     print()
+    print("Gurobi...", end=" ", flush=True)
     for k in nonbruteforce_nums:
         #prune
         pruned = {}
@@ -35,24 +39,31 @@ def lp_solve(happiness, stress, s_max, n, optimize=True):
                 if stress[u][v] > s_max / k:
                     pruned[(u, v)] = stress[u][v] #add pair to pruned
         # print(pruned)
-
-        val, arr = lp(happiness, stress, s_max, n, k, answer, pruned, optimize_parameters=optimize)
+        print("(", end="", flush=True)
+        val, arr, not_optimal = lp(happiness, stress, s_max, n, k, answer, pruned, optimize_parameters=optimize)
         #print("value found", round(val, 3))
+        if not_optimal:
+            suboptimal.append(k)
         if val > answer:
-            answer = round(val, 3)
+            #print(val, arr)
+            print("*", end="", flush=True)
+            answer = val
             rooms  = arr
             best_k = k   
+        print(")", end=" ", flush=True)
     print()
-    return round(answer, 3), rooms, best_k
+    print("SUBOPTIMAL K:", suboptimal)
+    return answer, rooms, best_k
         
 def lp(happiness, stress, s_max, n, room_num, cutoff, pruned, return_rooms=True, optimize_parameters=True):
     try:
         #model
         m = gp.Model("MIP")
+        #m.setParam("OutputFlag", 0)
         if optimize_parameters:
             m.setParam("Method", 1)
-            m.setParam("FeasibilityTol", 1e-4)
-            m.setParam("IntFeasTol", 1e-4)
+            #m.setParam("FeasibilityTol", 1e-4)
+            #m.setParam("IntFeasTol", 1e-4)
             #m.setParam("Heuristics", 0)
             m.setParam("Cutoff", cutoff)
             m.setParam("Quad", 0)
@@ -62,7 +73,7 @@ def lp(happiness, stress, s_max, n, room_num, cutoff, pruned, return_rooms=True,
             #m.setParam("MIPGapAbs", 0.1)
             m.setParam("DisplayInterval", 20)
             #m.setParam("Cuts", 0)
-            #m.setParam("TimeLimit", 300)
+            #m.setParam("TimeLimit", 600)
             #m.setParam("MIPGap", 1)
             #m.setParam("BarConvTol", 1e-3)
             #m.setParam("NodeMethod", 2)
@@ -70,8 +81,9 @@ def lp(happiness, stress, s_max, n, room_num, cutoff, pruned, return_rooms=True,
             #m.setParam("Disconnected", 0)
             #m.setParam("SolutionNumber", 0)
             #m.setParam("Presolve", 1)
-            #m.setParam("MIPFocus", 2)
-        m.setParam("OutputFlag", 1)
+            m.setParam("Threads", 24)
+            m.setParam("MIPFocus", 2)
+        #m.setParam("OutputFlag", 1)
         constraintCounter = 0
         varCounter = 0
 
@@ -227,58 +239,64 @@ def lp(happiness, stress, s_max, n, room_num, cutoff, pruned, return_rooms=True,
                 arr.append(e[u][v] * happiness[u][v])
         m.setObjective(gp.quicksum(arr), GRB.MAXIMIZE)
 
-        if (n == 20 and room_num == 3) \
-            or (n == 50 and room_num == 2) \
-            or (n <= 10 and room_num == 1):
-            print("Gurobi...", end=" ", flush=True)
+        #if (n == 20 and room_num == 3) \
+        #    or (n == 50 and room_num == 2) \
+        #    or (n <= 10 and room_num == 1):
+        #    print("Gurobi...", end=" ", flush=True)
         
-        print(room_num, end=" ", flush=True)
+        print(room_num, end=",", flush=True)
         
         # print(m.printStats())
         status = m.optimize()
         #print("Presolve Done", flush=True)
         if GRB.OPTIMAL == m.status:
-            print("* Optimal", end="", flush=True)
+            print("O", end="", flush=True)
             #the variables are in m.getVars()
             all_vars = m.getVars()
             desired_vars = []
             for v in all_vars:
-                if v.varName[0] == 'g' and int(v.x) == 1:
+                if v.varName[0] == 'g' and int(round(v.x, 2)) == 1:
                     desired_vars.append(v.varName)
             #print(desired_vars)
             ans = {}
             for v in desired_vars:
                 x = v.split('_', 1)[1].split(",")
                 ans[int(x[0])] = int(x[1])
-
+            #print(ans)
             if return_rooms:
-                return m.objVal, ans
-            return m.objVal, []
+                return m.objVal, ans, False
+            return m.objVal, [], False
         elif m.status == GRB.SUBOPTIMAL: 
-            print("* Suboptimal", end="", flush=True)
+            print("S", end="", flush=True)
         elif m.status == GRB.CUTOFF:
-            print("* Cutoff", flush=True)
-            return 0, []
+            print("C", end="", flush=True)
+            return 0, [], False
         elif GRB.TIME_LIMIT == m.status:
-            print("* TLE, Best suboptimal was:", m.objVal, end="", flush=True)
+            print("T", m.objVal, end="", flush=True)
+            return m.objVal, [], True
+        else:
+            print("I", end="", flush=True)
+            #return 0, [], False
         #the variables are in m.getVars()
         all_vars = m.getVars()
         desired_vars = []
         for v in all_vars:
-            if v.varName[0] == 'g' and int(v.x) == 1:
+            if v.varName[0] == 'g' and int(round(v.x, 2)) == 1:
                 desired_vars.append(v.varName)
-        print(desired_vars)
+        #print(desired_vars)
         ans = {}
         for v in desired_vars:
             x = v.split('_', 1)[1].split(",")
             ans[int(x[0])] = int(x[1])
-        print()
+        #print()
         if return_rooms:
-            return m.objVal, ans
-        return m.objVal, []
+            return m.objVal, ans, True
+        return m.objVal, [], True
     except gp.GurobiError as e:
+        print("E!", end="", flush=True)
         #print("Error Code " + str(e.errno) + ": " + str(e))
-        return 0, []
+        return 0, [], False
     except AttributeError:
+        print("E", end="", flush=True)
         #print("Encountered an attribute error")
-        return 0, []
+        return 0, [], False
