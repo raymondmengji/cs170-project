@@ -20,9 +20,9 @@ Project Spec: https://cs170.org/assets/pdf/project_spec.pdf
 We attempted to solve this NP-Hard problem using Mixed Integer Programming. 
 
 ## Inputs
-We obtained our inputs by randomly generated inputs where the happiesness and stress is determined randomly between [0,5]. 
+We obtained our inputs by randomly generating inputs where the happiesness and stress is determined randomly between [0,5]. 
 We ran these inputs through our solver repeatedly and chose the ones that took the longest amount of time. If we did not have
-our solver ready, we would have tried to build our inputs from an output that we determine might be hard. 
+our solver ready, we would have tried to build our inputs from an output that we determined might be hard. 
 
 ## Algorithm 
 We decided to bruteforce group sizes of 10 because it would lead to the optimal solution in a very quick time. 
@@ -30,7 +30,7 @@ We then reduced the problem to a linear programming problem to use the powerful 
 However, we do brute force some break room sizes for group sizes of 20 and 50 because they have less than a million permutations.
 We believe this is a good approach because the optimizers online are able to solve our linear program quickly
 
-We tried to the reduce the problem to graph partitioning and found a software called METIS that we attempted to use. 
+We also tried to the reduce the problem to graph partitioning and found a software called METIS that we attempted to use. 
 Nonetheless, we decided the LP route was a better option. 
 
 ## LP/MIP Solver
@@ -44,7 +44,7 @@ We generated a Google Cloud Computer Engine using the free credits available to 
 We also used one instructional machine.
 
 ## What would we do different with more time?
-We definitely try to come up with a better approximation algorithm for group sizes of 50. Some of their
+We would definitely try to come up with a better approximation algorithm for group sizes of 50. Some of their
 computations took long amounts of time.  
 
 ## Files
