@@ -19,6 +19,34 @@ Project Spec: https://cs170.org/assets/pdf/project_spec.pdf
 ## Approach
 We attempted to solve this NP-Hard problem using Mixed Integer Programming. 
 
+## Inputs
+We obtained our inputs by randomly generating inputs where the happiesness and stress is determined randomly between [0,5]. 
+We ran these inputs through our solver repeatedly and chose the ones that took the longest amount of time. If we did not have
+our solver ready, we would have tried to build our inputs from an output that we determined might be hard. 
+
+## Algorithm 
+We decided to bruteforce group sizes of 10 because it would lead to the optimal solution in a very quick time. 
+We then reduced the problem to a linear programming problem to use the powerful freely available optimizers online.
+However, we do brute force some break room sizes for group sizes of 20 and 50 because they have less than a million permutations.
+We believe this is a good approach because the optimizers online are able to solve our linear program quickly
+
+We also tried to the reduce the problem to graph partitioning and found a software called METIS that we attempted to use. 
+Nonetheless, we decided the LP route was a better option. 
+
+## LP/MIP Solver
+We used the Gurobi optimizer, which is freely available for students. 
+
+## LP/MIP Construction
+We created our LP based on the conditions seen in the constraints.pdf file.
+
+## Computational Resources
+We generated a Google Cloud Computer Engine using the free credits available to any student. 
+We also used one instructional machine.
+
+## What would we do different with more time?
+We would definitely try to come up with a better approximation algorithm for group sizes of 50. Some of their
+computations took long amounts of time.  
+
 ## Files
 solver.py  - Runs all files in samples/inputs and prints the highest valid Total Happiness of each graph
 
@@ -27,12 +55,6 @@ timeall.py - Same as solver.py, but also prints diagnostic data about speed and 
 timetest.py (n) (k=10) - Randomly generates k graphs (default 10) with n nodes and prints diagnostic data about its performance. 
 Useful to test/generate hard inputs
 
-## LP Solver
-We used the Gurobi optimizer, which is freely available for students. 
-
-## LP Construction
-We created our LP based on the conditions seen in the constraints.pdf file.
-
 ## Resources Used
 https://arxiv.org/pdf/1802.07144.pdf
 
@@ -40,6 +62,6 @@ https://www.gurobi.com/
 
 https://www.gurobi.com/documentation/9.1/refman/py_python_api_overview.html
 
-https://cs.stackexchange.com/questions/12102/express-boolean-logic-operations-in-zero-one-integer-linear-programming-ilp
+https://codereview.stackexchange.com/questions/1526/
 
-Algorithm by Gregory Morse from https://codereview.stackexchange.com/questions/1526/
+https://cs.stackexchange.com/questions/12102/express-boolean-logic-operations-in-zero-one-integer-linear-programming-ilp
