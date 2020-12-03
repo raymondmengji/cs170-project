@@ -81,8 +81,8 @@ def lp(happiness, stress, s_max, n, room_num, cutoff, pruned, return_rooms=True,
             #m.setParam("Disconnected", 0)
             #m.setParam("SolutionNumber", 0)
             #m.setParam("Presolve", 1)
-            m.setParam("Threads", 24)
-            m.setParam("MIPFocus", 2)
+            #m.setParam("Threads", 24)
+            #m.setParam("MIPFocus", 2)
         #m.setParam("OutputFlag", 1)
         constraintCounter = 0
         varCounter = 0

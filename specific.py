@@ -102,7 +102,6 @@ if __name__ == '__main__':
             happiness = calculate_happiness(D, G)
             print(happiness, best_val)
             print("Total Happiness: {}".format(happiness))
-            assert round(happiness, 2) == round(best_val, 2)
             assert is_valid_solution(D, G, s, k)
             print("Improved max happiness, from", orig_val, "to", best_val)
             write_output_file(D, output_path)
