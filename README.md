@@ -4,7 +4,7 @@
 
 Run `pip install -r requirements.txt` to install all dependencies used.
 
-## Team - Undecided
+## Team
 Julian Meyn, John Le, Raymond Ji 
 
 ## Problem Statment
