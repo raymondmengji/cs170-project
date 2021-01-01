@@ -17,7 +17,7 @@ However, this sounds like a really difficult task, so we decided to outsource th
 Project Spec: https://cs170.org/assets/pdf/project_spec.pdf
 
 ## Approach
-We attempted to solve this NP-Hard problem using Mixed Integer Programming. 
+We attempted to solve this NP-Complete problem using Mixed Integer Programming. 
 
 ## Inputs
 We obtained our inputs by randomly generating inputs where the happiesness and stress is determined randomly between [0,5]. 
